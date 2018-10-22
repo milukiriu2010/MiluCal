@@ -3,11 +3,13 @@ package milu.kiriu2010.milucal.gui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import milu.kiriu2010.cal.ANS
+import milu.kiriu2010.calv2.ContextCal
 
 import milu.kiriu2010.milucal.R
 import milu.kiriu2010.util.MyTool
@@ -21,6 +23,11 @@ import java.lang.Exception
  */
 class CalFragment : Fragment() {
 
+    // 計算バージョン
+    private var calVer = "v2"
+
+    // 計算バージョンを設定するグループ
+    private lateinit var radioGroup: RadioGroup
     // 計算式を選択するビュー
     private lateinit var spinCal: Spinner
     // 計算式を入力するビュー
@@ -42,6 +49,16 @@ class CalFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_cal, container, false)
+
+        // 計算バージョンを設定するグループ
+        radioGroup = view.findViewById(R.id.radioGroup)
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            calVer = when (checkedId) {
+                R.id.rbtnV1 -> "v1"
+                R.id.rbtnV2 -> "v2"
+                else -> "v2"
+            }
+        }
 
         // 計算式を選択するビュー
         spinCal = view.findViewById(R.id.spinCal)
@@ -78,11 +95,20 @@ class CalFragment : Fragment() {
         val btnCal = view.findViewById<Button>(R.id.btnCal)
         btnCal.setOnClickListener {
             try {
-                val ans = ANS()
-                // 解析
-                ans.interpret(editTextCal.text.toString())
-                // 計算
-                val res = ans.execute()
+                var res = 0
+                if ( calVer == "v1") {
+                    val ans = ANS()
+                    // 解析
+                    ans.interpret(editTextCal.text.toString())
+                    // 計算
+                    res = ans.execute()
+                }
+                else {
+                    val ctxCal = ContextCal(editTextCal.text.toString())
+                    ctxCal.tokenLst.forEachIndexed { index, s ->
+                        Log.d( javaClass.simpleName, "token[$index][$s]")
+                    }
+                }
                 // 値を反映
                 textViewResult.text = res.toString()
                 textViewExp.text = ""
