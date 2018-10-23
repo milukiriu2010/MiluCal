@@ -95,19 +95,20 @@ class CalFragment : Fragment() {
         val btnCal = view.findViewById<Button>(R.id.btnCal)
         btnCal.setOnClickListener {
             try {
-                var res = 0
+                var res = 0.0
                 if ( calVer == "v1") {
                     val ans = ANS()
                     // 解析
                     ans.interpret(editTextCal.text.toString())
                     // 計算
-                    res = ans.execute()
+                    res = ans.execute().toDouble()
                 }
                 else {
                     val ctxCal = ContextCal(editTextCal.text.toString())
                     ctxCal.tokenLst.forEachIndexed { index, s ->
                         Log.d( javaClass.simpleName, "token[$index][$s]")
                     }
+                    res = ctxCal.execute()
                 }
                 // 値を反映
                 textViewResult.text = res.toString()
