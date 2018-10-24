@@ -95,13 +95,13 @@ class CalFragment : Fragment() {
         val btnCal = view.findViewById<Button>(R.id.btnCal)
         btnCal.setOnClickListener {
             try {
-                var res = 0.0
+                var res = 0.0.toBigDecimal()
                 if ( calVer == "v1") {
                     val ans = ANS()
                     // 解析
                     ans.interpret(editTextCal.text.toString())
                     // 計算
-                    res = ans.execute().toDouble()
+                    res = ans.execute().toBigDecimal()
                 }
                 else {
                     val ctxCal = ContextCal(editTextCal.text.toString())

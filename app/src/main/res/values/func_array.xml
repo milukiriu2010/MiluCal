@@ -6,10 +6,20 @@
         <item>16.02-3.01+4.01</item>
         <item>3+2*4</item>
         <item>3*2+4</item>
+        <item>2*3*4</item>
+        <item>2*3*4*5</item>
+        <item>1.2*2.4</item>
+        <item>100/5</item>
+        <item>100/5/5</item>
+        <item>-1*5</item>
+        <item>-1/5</item>
+        <item>-1*5*2</item>
+        <item>-1*5/2</item>
+        <item>-1*5/2/2</item>
+        <item>-1*5/0</item>
         <item>2*(1+2)</item>
         <item>(1+2)*5</item>
         <item>2+((2-3)*(4/2))+1</item>
-        <item>-1*5</item>
         <item>2.0*cos(45/180*PI)</item>
     </string-array>
 </resources>
