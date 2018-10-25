@@ -19,7 +19,13 @@
         <item>-1*5/0</item>
         <item>2*(1+2)</item>
         <item>(1+2)*5</item>
+        <item>(1+2)*(3+4)</item>
+        <item>((1+2)*(3+4))*2</item>
         <item>2+((2-3)*(4/2))+1</item>
+        <item>2^4</item>
+        <item>3*2^4</item>
+        <item>64/2^4</item>
+        <item>(1+2)^3</item>
         <item>2.0*cos(45/180*PI)</item>
     </string-array>
 </resources>
