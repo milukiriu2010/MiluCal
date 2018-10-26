@@ -26,6 +26,11 @@
         <item>3*2^4</item>
         <item>64/2^4</item>
         <item>(1+2)^3</item>
-        <item>2.0*cos(45/180*PI)</item>
+        <item>(1+2)*sqrt(16)</item>
+        <item>(1+2)*ln(exp(2))</item>
+        <item>(1+2)*log(100)</item>
+        <item>2.0*cos(45)</item>
+        <item>2.0*sin(60)</item>
+        <item>2.0*tan(60)</item>
     </string-array>
 </resources>

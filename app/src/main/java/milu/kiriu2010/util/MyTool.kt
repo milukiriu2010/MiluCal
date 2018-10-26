@@ -9,11 +9,30 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+// 2018.10.25  階乗
 // 2018.10.06  rawファイルの中身をString型に変換
 // 2018.09.25  今日の日付をYYYYMMDD形式で取得
 // 2018.09.15  String(ISO8601+RFC3339)をDateへ変換
 class MyTool {
     companion object {
+        // ----------------------------------------
+        // 2018.10.25
+        // ----------------------------------------
+        // 階乗
+        // ----------------------------------------
+        // https://ja.wikipedia.org/wiki/%E9%9A%8E%E4%B9%97
+        fun factorial( num: Int ): Int {
+            var x: Int
+            if ( num > 0 ) {
+                x = num * factorial(num-1)
+            }
+            else {
+                // 0! = 1
+                x = 1
+            }
+            return x
+        }
+
         // ----------------------------------------
         // 2018.10.06
         // ----------------------------------------
