@@ -1,19 +1,31 @@
 package milu.kiriu2010.milucal.gui
 
 
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.tts.TextToSpeech
 import android.support.v4.app.Fragment
+import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import milu.kiriu2010.calv2.ContextCal
 import milu.kiriu2010.milucal.CalApplication
 
 import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
+import milu.kiriu2010.milucal.id.RequestID
+import milu.kiriu2010.voice.Voice2Equation
+import java.util.*
 
 
 class Cal02Fragment : Fragment() {
@@ -24,6 +36,8 @@ class Cal02Fragment : Fragment() {
     private lateinit var dataEQ: EditText
     // 結果を表示するビュー
     private lateinit var dataResult: TextView
+    // 音声読み上げ
+    private lateinit var tts: TextToSpeech
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -32,8 +46,17 @@ class Cal02Fragment : Fragment() {
         // アプリ設定を取得
         appConf = (context?.applicationContext as? CalApplication)?.appConf ?: AppConf()
 
+
+        // キーボードを非表示にする
+        //activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
         // 式を入力するビュー
         dataEQ = view.findViewById(R.id.dataEQ)
+        // キーボードを表示しない
+        //dataEQ.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        // カーソルを表示する
+        dataEQ.setTextIsSelectable(true)
+
         // 結果を表示するビュー
         dataResult = view.findViewById(R.id.dataResult)
 
@@ -52,21 +75,8 @@ class Cal02Fragment : Fragment() {
         // 計算"="
         val btnEQ = view.findViewById<Button>(R.id.btnEQ)
         btnEQ.setOnClickListener {
-            // 計算を実施
-            val ctxCal = ContextCal(dataEQ.text.toString())
-            // 対数(x)を設定
-            ctxCal.logx = appConf.logx.toDouble()
-
-            try {
-                val num = ctxCal.execute()
-
-                // 計算結果を表示
-                dataResult.setText(num.toString())
-            }
-            catch ( ex: Exception ) {
-                // エラー結果を表示
-                dataResult.setText(ex.message)
-            }
+            // 計算実行
+            calcExec(false)
         }
 
         // 左かっこ"("
@@ -92,10 +102,18 @@ class Cal02Fragment : Fragment() {
         // 1
         val btn1 = view.findViewById<Button>(R.id.btn1)
         btn1.setOnClickListener { insertStr("1" ) }
+        btn1.setOnLongClickListener { insertStr("1" ); true }
 
         // 2
         val btn2 = view.findViewById<Button>(R.id.btn2)
-        btn2.setOnClickListener { insertStr("2" ) }
+        //btn2.setOnClickListener { insertStr("2" ) }
+        btn2.setOnTouchListener( object: RepeatListener(400,100,
+            object: View.OnClickListener {
+                override fun onClick(v: View?) {
+                    insertStr("2")
+                }
+            }) {
+        })
 
         // 3
         val btn3 = view.findViewById<Button>(R.id.btn3)
@@ -193,17 +211,59 @@ class Cal02Fragment : Fragment() {
         val btnLOGX = view.findViewById<Button>(R.id.btnLOGX)
         btnLOGX.setOnClickListener { insertStr("logx(" ) }
 
+        // 音声入力ボタン
+        val btnVoice = view.findViewById<ImageButton>(R.id.btnVoice)
+        btnVoice.setOnClickListener {
+            try {
+                // 音声認識の準備
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, resources.getString(R.string.action_voice))
+                startActivityForResult(intent, RequestID.ID_VOICE.id)
+            }
+            catch (ex: ActivityNotFoundException) {
+                Toast.makeText(context, resources.getString(R.string.errmsg_voice_input), Toast.LENGTH_LONG)
+            }
+        }
+
+        // 音声読み上げ
+        tts = TextToSpeech(context) { status ->
+            if ( status == TextToSpeech.SUCCESS ) {
+                if ( tts.isLanguageAvailable(Locale.getDefault()) >= TextToSpeech.LANG_AVAILABLE ) {
+                    tts.language = Locale.getDefault()
+                }
+                else {
+                    tts.language = Locale.US
+                }
+            }
+            else {
+                Toast.makeText(context, resources.getString(R.string.errmsg_voice_output), Toast.LENGTH_LONG)
+            }
+        }
+
         return view
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // キーボードを閉じる
+        //val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        //imm.hideSoftInputFromWindow( view?.windowToken, 0)
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
+
     // 式に文字挿入
-    private fun insertStr(str: String) {
+    private fun insertStr(strIns: String) {
+        // 式に設定されている文字
+        val str = dataEQ.text.toString()
         // 現在のカーソル位置
         val posS = dataEQ.selectionStart
+
         // 文字挿入
-        dataEQ.setText(dataEQ.text.toString() + str)
+        dataEQ.setText( str.substring(0,posS) + strIns + str.substring(posS) )
         // カーソル位置を移動
-        dataEQ.setSelection(posS+str.length)
+        dataEQ.setSelection(posS+strIns.length)
     }
 
     // カーソル移動
@@ -265,6 +325,77 @@ class Cal02Fragment : Fragment() {
             // カーソル位置を１つ前にする
             dataEQ.setSelection(posS-1)
         }
+    }
+
+    // 計算実行
+    private fun calcExec( voiceOn: Boolean ) {
+        // 計算を実施
+        val ctxCal = ContextCal(dataEQ.text.toString())
+        // 対数(x)を設定
+        ctxCal.logx = appConf.logx.toDouble()
+
+        try {
+            val num = ctxCal.execute()
+
+            // 計算結果を表示
+            dataResult.setText(num.toString())
+        }
+        catch ( ex: Exception ) {
+            // エラー結果を表示
+            dataResult.setText(ex.message)
+        }
+
+        // 音声読み上げ
+        if ( voiceOn ) {
+            // 声の高さ
+            tts.setPitch(1.0f)
+            // 読み上げ速度
+            tts.setSpeechRate(1.0f)
+            // 読み上げ中ならストップ
+            if ( tts.isSpeaking ) tts.stop()
+
+            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                tts.speak( dataResult.text.toString(), TextToSpeech.QUEUE_FLUSH, null, "messageID" )
+            }
+            else {
+                tts.speak( dataResult.text.toString(), TextToSpeech.QUEUE_FLUSH, null )
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            // -----------------------------------------------
+            // 音声入力の結果を取得
+            // -----------------------------------------------
+            RequestID.ID_VOICE.id -> {
+                // 認識結果のうち最初のものを採用する
+                val candidates = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) ?: listOf<String>()
+                if (candidates.size > 0 ) {
+                    val strVoice = candidates[0]
+
+                    Log.d( javaClass.simpleName, "voice[$strVoice]")
+                    voiceControl(strVoice)
+                }
+            }
+            else -> {
+                Log.d(javaClass.simpleName, "requestCode[$requestCode]")
+                super.onActivityResult(requestCode, resultCode, data)
+            }
+        }
+    }
+
+    private fun voiceControl( strOrg: String ) {
+        Log.d( javaClass.simpleName, "変換前:${strOrg}")
+        val v2e = Voice2Equation()
+        val strNew = v2e.correct(strOrg)
+        Log.d( javaClass.simpleName, "変換後:${strNew}")
+
+        // 音声入力した内容をビューに表示
+        dataEQ.setText(strNew)
+
+        // 計算実行
+        calcExec(true)
     }
 
     companion object {

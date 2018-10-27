@@ -7,6 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "milu.kiriu2010.milucal"
         minSdkVersion 15
         targetSdkVersion 28

@@ -5,8 +5,13 @@ import milu.kiriu2010.util.MyTool
 import java.lang.NumberFormatException
 import java.math.BigDecimal
 import java.math.MathContext
-import java.util.*
-import kotlin.math.*
+import java.util.StringTokenizer
+import kotlin.math.log
+import kotlin.math.log10
+import kotlin.math.ln
+import kotlin.math.pow
+import kotlin.math.exp
+import kotlin.math.sqrt
 
 class ContextCal(
     // トークンリスト
@@ -63,7 +68,10 @@ class ContextCal(
     }
 
     constructor(eq: String) : this() {
-        val tokenizer = StringTokenizer(eq,"+-*/!^()",true)
+        // スペースは除く
+        val eqNew = eq.replace("\\s".toRegex(),"")
+        // 演算子で分割
+        val tokenizer = StringTokenizer(eqNew,"+-*/!^()",true)
         while ( tokenizer.hasMoreTokens() ) {
             tokenLst.add( tokenizer.nextToken() )
         }
@@ -124,7 +132,7 @@ class ContextCal(
                 // プラス符号
                 ( s == "+" ) -> {
                     // 式の先頭 or カッコ内の先頭
-                    if ( ( prevCalType == CalType.YET ) or ( prevCalType == CalType.BRACKET_LEFT ) ) {
+                    if ( ( prevCalType == CalType.YET ) or ( prevCalType == CalType.BRACKET_LEFT ) or ( prevCalType == CalType.UNKNOWN ) ) {
                         prevCalType = CalType.SIGN_PLUS
                     }
                     // 上記以外
@@ -135,7 +143,7 @@ class ContextCal(
                 // マイナス符号
                 ( s == "-" ) -> {
                     // 式の先頭 or カッコ内の先頭
-                    if ( ( prevCalType == CalType.YET ) or ( prevCalType == CalType.BRACKET_LEFT ) ) {
+                    if ( ( prevCalType == CalType.YET ) or ( prevCalType == CalType.BRACKET_LEFT ) or ( prevCalType == CalType.UNKNOWN ) ) {
                         prevCalType = CalType.SIGN_MINUS
                     }
                     // 上記以外
@@ -339,14 +347,16 @@ class ContextCal(
                                 index--
                             }
                             CalType.FUNC_LOGX -> {
-                                tokenLst[index-1] = log(logx,num.toDouble()).toString()
+                                tokenLst[index-1] = log(num.toDouble(),logx).toString()
                                 ite.remove()
                                 index--
                             }
                             CalType.FUNC_COS -> {
                                 //tokenLst[index-1] = cos(num.toDouble()/180.0* PI).toString()
                                 //tokenLst[index-1] = Math.cos( Math.toRadians(num.toDouble()) ).toString()
-                                tokenLst[index-1] = cos( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
+                                //tokenLst[index-1] = cos( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
+                                //tokenLst[index-1] = Math.cos( Math.toRadians(num.toDouble()) ).toString()
+                                tokenLst[index-1] = "%.7f".format(Math.cos( Math.toRadians(num.toDouble()) ))
                                 ite.remove()
                                 index--
                             }
@@ -354,14 +364,20 @@ class ContextCal(
                                 //tokenLst[index-1] = sin(num.toDouble()/180.0* PI).toString()
                                 //tokenLst[index-1] = Math.sin( Math.toRadians(num.toDouble()) ).toString()
                                 // sin(30) = 0.49999999
-                                tokenLst[index-1] = sin( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
+                                //tokenLst[index-1] = sin( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
+                                tokenLst[index-1] = "%.7f".format(Math.sin( Math.toRadians(num.toDouble()) ))
+                                //Log.d( javaClass.simpleName, "num=%.7f".format(num.toDouble()))
+                                //Log.d( javaClass.simpleName, "sin(30org)=%.7f".format(Math.sin( Math.toRadians(num.toDouble()) )))
+                                //Log.d( javaClass.simpleName, "sin(30)=%.7f".format(Math.sin(Math.toRadians(30.0))))
                                 ite.remove()
                                 index--
                             }
                             CalType.FUNC_TAN -> {
                                 //tokenLst[index-1] = tan(num.toDouble()/180.0* PI).toString()
                                 //tokenLst[index-1] = Math.tan( Math.toRadians(num.toDouble()) ).toString()
-                                tokenLst[index-1] = tan( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
+                                //tokenLst[index-1] = tan( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
+                                //tokenLst[index-1] = Math.tan( Math.toRadians(num.toDouble()) ).toString()
+                                tokenLst[index-1] = "%.7f".format(Math.tan( Math.toRadians(num.toDouble()) ))
                                 ite.remove()
                                 index--
                             }
