@@ -1,22 +1,18 @@
 package milu.kiriu2010.milucal.gui
 
 
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.support.v4.app.Fragment
-import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import milu.kiriu2010.calv2.ContextCal
 import milu.kiriu2010.milucal.CalApplication
@@ -55,18 +51,24 @@ class Cal02Fragment : Fragment() {
         // キーボードを表示しない
         //dataEQ.setRawInputType(InputType.TYPE_CLASS_TEXT)
         // カーソルを表示する
-        dataEQ.setTextIsSelectable(true)
+        //dataEQ.setTextIsSelectable(true)
+        // キーボードを表示しない
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            dataEQ.showSoftInputOnFocus = false
+        }
 
         // 結果を表示するビュー
         dataResult = view.findViewById(R.id.dataResult)
 
         // 一文字削除"DEL"
         val btnDEL = view.findViewById<Button>(R.id.btnDEL)
-        btnDEL.setOnClickListener { delStrByDEL() }
+        //btnDEL.setOnClickListener { delStrByDEL() }
+        btnDEL.setOnTouchListener( MyRepeatListener(DelClickListener()) )
 
         // 一文字削除"BS"
         val btnBS = view.findViewById<Button>(R.id.btnBS)
-        btnBS.setOnClickListener { delStrByBS() }
+        //btnBS.setOnClickListener { delStrByBS() }
+        btnBS.setOnTouchListener( MyRepeatListener(BsClickListener()) )
 
         // クリア
         val btnAC = view.findViewById<Button>(R.id.btnAC)
@@ -89,24 +91,26 @@ class Cal02Fragment : Fragment() {
 
         // カーソル移動(左:←)
         val btnCurLeft = view.findViewById<Button>(R.id.btnCurLeft)
-        btnCurLeft.setOnClickListener { moveCursor(-1) }
+        //btnCurLeft.setOnClickListener { moveCursor(-1) }
+        btnCurLeft.setOnTouchListener( MyRepeatListener(MoveClickListener(-1)) )
 
         // カーソル移動(右:→)
         val btnCurRight = view.findViewById<Button>(R.id.btnCurRight)
-        btnCurRight.setOnClickListener { moveCursor(1) }
+        //btnCurRight.setOnClickListener { moveCursor(1) }
+        btnCurRight.setOnTouchListener( MyRepeatListener(MoveClickListener(1)) )
 
         // 0
         val btn0 = view.findViewById<Button>(R.id.btn0)
-        btn0.setOnClickListener { insertStr("0" ) }
+        btn0.setOnTouchListener( MyRepeatListener(InsertClickListener("0")) )
 
         // 1
         val btn1 = view.findViewById<Button>(R.id.btn1)
-        btn1.setOnClickListener { insertStr("1" ) }
-        btn1.setOnLongClickListener { insertStr("1" ); true }
+        //btn1.setOnLongClickListener { insertStr("1" ); true }
+        btn1.setOnTouchListener( MyRepeatListener(InsertClickListener("1")) )
 
         // 2
         val btn2 = view.findViewById<Button>(R.id.btn2)
-        //btn2.setOnClickListener { insertStr("2" ) }
+        /*
         btn2.setOnTouchListener( object: RepeatListener(400,100,
             object: View.OnClickListener {
                 override fun onClick(v: View?) {
@@ -114,34 +118,36 @@ class Cal02Fragment : Fragment() {
                 }
             }) {
         })
+        */
+        btn2.setOnTouchListener( MyRepeatListener(InsertClickListener("2")) )
 
         // 3
         val btn3 = view.findViewById<Button>(R.id.btn3)
-        btn3.setOnClickListener { insertStr("3" ) }
+        btn3.setOnTouchListener( MyRepeatListener(InsertClickListener("3")) )
 
         // 4
         val btn4 = view.findViewById<Button>(R.id.btn4)
-        btn4.setOnClickListener { insertStr("4" ) }
+        btn4.setOnTouchListener( MyRepeatListener(InsertClickListener("4")) )
 
         // 5
         val btn5 = view.findViewById<Button>(R.id.btn5)
-        btn5.setOnClickListener { insertStr("5" ) }
+        btn5.setOnTouchListener( MyRepeatListener(InsertClickListener("5")) )
 
         // 6
         val btn6 = view.findViewById<Button>(R.id.btn6)
-        btn6.setOnClickListener { insertStr("6" ) }
+        btn6.setOnTouchListener( MyRepeatListener(InsertClickListener("6")) )
 
         // 7
         val btn7 = view.findViewById<Button>(R.id.btn7)
-        btn7.setOnClickListener { insertStr("7" ) }
+        btn7.setOnTouchListener( MyRepeatListener(InsertClickListener("7")) )
 
         // 8
         val btn8 = view.findViewById<Button>(R.id.btn8)
-        btn8.setOnClickListener { insertStr("8" ) }
+        btn8.setOnTouchListener( MyRepeatListener(InsertClickListener("8")) )
 
         // 9
         val btn9 = view.findViewById<Button>(R.id.btn9)
-        btn9.setOnClickListener { insertStr("9" ) }
+        btn9.setOnTouchListener( MyRepeatListener(InsertClickListener("9")) )
 
         // 徐算"/"
         val btnDIV = view.findViewById<Button>(R.id.btnDIV)
@@ -354,6 +360,7 @@ class Cal02Fragment : Fragment() {
             // 読み上げ中ならストップ
             if ( tts.isSpeaking ) tts.stop()
 
+            // 読み上げ実施
             if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
                 tts.speak( dataResult.text.toString(), TextToSpeech.QUEUE_FLUSH, null, "messageID" )
             }
@@ -406,4 +413,46 @@ class Cal02Fragment : Fragment() {
                 }
             }
     }
+
+    inner class MyRepeatListener( clickListener: View.OnClickListener )
+        : RepeatListener(400,100, clickListener) {
+    }
+
+    // 長押し時に文字を挿入するリスナー
+    inner class InsertClickListener(
+        // リピートされる文字
+        val repeatData: String)
+        : View.OnClickListener {
+        override fun onClick(v: View?) {
+            insertStr(repeatData)
+        }
+    }
+
+    // 長押し時にカーソルを移動するリスナー
+    inner class MoveClickListener(
+        // カーソル移動距離
+        val dv: Int)
+        : View.OnClickListener {
+        override fun onClick(v: View?) {
+            moveCursor(dv)
+        }
+
+    }
+
+    // 長押し時にカーソル位置の文字を削除するリスナー
+    inner class DelClickListener()
+        : View.OnClickListener {
+        override fun onClick(v: View?) {
+            delStrByDEL()
+        }
+    }
+
+    // 長押し時にカーソル手前の文字を削除するリスナー
+    inner class BsClickListener()
+        : View.OnClickListener {
+        override fun onClick(v: View?) {
+            delStrByBS()
+        }
+    }
+
 }

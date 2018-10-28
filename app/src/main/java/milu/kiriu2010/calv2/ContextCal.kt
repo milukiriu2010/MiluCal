@@ -166,16 +166,11 @@ class ContextCal(
                         // 1つ前が符号の場合マージし、
                         // トークンリストから符号を削除
                         if ( prevCalType == CalType.SIGN_PLUS ) {
-                            // ConcurrentModificationException
-                            //tokenLst.removeAt(index-1)
                             tokenLst[index-1] = num.toString()
                             ite.remove()
                             index--
                         }
                         else if ( prevCalType == CalType.SIGN_MINUS ) {
-                            // ConcurrentModificationException
-                            //tokenLst[index] = (-1 * num).toString()
-                            //tokenLst.removeAt(index-1)
                             tokenLst[index-1] = (-1.toBigDecimal() * num).toString()
                             ite.remove()
                             index--
@@ -273,9 +268,14 @@ class ContextCal(
             // 再度かっこ"()"内の計算を実施
             calBracket()
         }
-        // 右かっこ")"しかみつからない場合エラー
+        // 右かっこ")"しかみつからない場合
+        // 一番左に左かっこ"("を付与
         else {
-            throw CalException("Bracket'()' should be pair")
+            //throw CalException("Bracket'()' should be pair")
+            // 一番左に左かっこ"("を付与
+            tokenLst.add(0,"(")
+            // 再度かっこ"()"内の計算を実施
+            calBracket()
         }
     }
 

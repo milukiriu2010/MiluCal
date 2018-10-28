@@ -26,7 +26,8 @@ open class RepeatListener
  * periodically
  */
     (
-    private val initialInterval: Int, private val normalInterval: Int,
+    private val initialInterval: Int,
+    private val normalInterval: Int,
     private val clickListener: OnClickListener?
 ) : View.OnTouchListener {
 

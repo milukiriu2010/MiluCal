@@ -17,6 +17,8 @@ import android.view.ViewGroup
 import milu.kiriu2010.milucal.R
 import kotlinx.android.synthetic.main.activity_cal.*
 import kotlinx.android.synthetic.main.fragment_cal02.view.*
+import milu.kiriu2010.milucal.gui.misc.ConfFragment
+import milu.kiriu2010.milucal.id.FragmentID
 
 class CalActivity : AppCompatActivity() {
 
@@ -43,16 +45,14 @@ class CalActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
-
-        if (id == R.id.action_settings) {
-            return true
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                val dialog = ConfFragment.newInstance()
+                dialog.show(supportFragmentManager, FragmentID.ID_SETTINGS.id)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-
-        return super.onOptionsItemSelected(item)
     }
 
     /*

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MiluCal</string>
     <string name="action_voice">音声入力してください</string>
     <string name="errmsg_voice_input">音声入力を起動できませんでした</string>
     <string name="errmsg_voice_output">音声読み上げを起動できません</string>
+    <string name="label_tax1">税率1(%)</string>
+    <string name="label_tax2">税率2(%)</string>
+    <string name="label_voice">音声入力に使う言語</string>
 </resources>
