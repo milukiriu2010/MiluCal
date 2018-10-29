@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import milu.kiriu2010.milucal.R
 import kotlinx.android.synthetic.main.activity_cal.*
 import kotlinx.android.synthetic.main.fragment_cal02.view.*
+import milu.kiriu2010.milucal.gui.misc.AboutFragment
 import milu.kiriu2010.milucal.gui.misc.ConfFragment
 import milu.kiriu2010.milucal.id.FragmentID
 
@@ -46,53 +47,19 @@ class CalActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+        // "設定"フラグメントを表示
             R.id.action_settings -> {
                 val dialog = ConfFragment.newInstance()
                 dialog.show(supportFragmentManager, FragmentID.ID_SETTINGS.id)
                 true
             }
+        // "About Me"フラグメントを表示
+            R.id.action_about -> {
+                val dialog = AboutFragment.newInstance()
+                dialog.show(supportFragmentManager, FragmentID.ID_ABOUT.id)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-    /*
-    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-
-        override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
-        }
-
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
-        }
-    }
-
-    class PlaceholderFragment : Fragment() {
-
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            val rootView = inflater.inflate(R.layout.fragment_cal02, container, false)
-            rootView.section_label.text = getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
-            return rootView
-        }
-
-        companion object {
-            private val ARG_SECTION_NUMBER = "section_number"
-
-            fun newInstance(sectionNumber: Int): PlaceholderFragment {
-                val fragment = PlaceholderFragment()
-                val args = Bundle()
-                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
-                fragment.arguments = args
-                return fragment
-            }
-        }
-    }
-    */
 }
-

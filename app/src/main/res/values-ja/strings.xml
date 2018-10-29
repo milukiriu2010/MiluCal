@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_settings">設定</string>
+    <string name="action_about">このアプリについて</string>
+    <string name="action_rate_me">レーティング</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="action_default">デフォルト</string>
     <string name="action_voice">音声入力してください</string>
     <string name="errmsg_voice_input">音声入力を起動できませんでした</string>
     <string name="errmsg_voice_output">音声読み上げを起動できません</string>

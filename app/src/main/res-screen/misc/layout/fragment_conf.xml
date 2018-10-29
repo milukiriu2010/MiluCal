@@ -81,7 +81,7 @@
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
             app:layout_constraintTop_toTopOf="@+id/dataLogx" app:layout_constraintBottom_toBottomOf="@+id/dataLogx"
             app:layout_constraintStart_toEndOf="@+id/dataLogx" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" android:max="16" android:progress="2"/>
+            android:layout_marginStart="8dp" android:max="14" android:progress="0"/>
     <TextView
             android:text="@string/label_voice"
             android:layout_width="wrap_content"
@@ -101,18 +101,27 @@
             android:text="@string/action_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/btnOK" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/spinVoice" app:layout_constraintHorizontal_bias="0.5"
+            android:id="@+id/btnOK"
+            app:layout_constraintTop_toTopOf="@+id/btnDefault" app:layout_constraintBottom_toBottomOf="@+id/btnDefault"
+            app:layout_constraintStart_toEndOf="@+id/btnDefault" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/btnCancel"/>
     <Button
             android:text="@string/action_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnCancel" app:layout_constraintStart_toEndOf="@+id/btnOK" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:id="@+id/btnCancel"
             app:layout_constraintTop_toTopOf="@+id/btnOK" app:layout_constraintBottom_toBottomOf="@+id/btnOK"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintHorizontal_bias="0.5"/>
+            app:layout_constraintStart_toEndOf="@+id/btnOK" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.5" android:textAllCaps="false"/>
+    <Button
+            android:text="@string/action_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnDefault" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/spinVoice" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/btnOK" android:layout_marginTop="8dp" android:textAllCaps="false"/>
 
 </android.support.constraint.ConstraintLayout>

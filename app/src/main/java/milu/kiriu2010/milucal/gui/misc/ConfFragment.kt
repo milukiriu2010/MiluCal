@@ -7,10 +7,7 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.SeekBar
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import milu.kiriu2010.milucal.CalApplication
 
 import milu.kiriu2010.milucal.R
@@ -39,6 +36,23 @@ class ConfFragment : DialogFragment() {
     private lateinit var adapterVoice: ArrayAdapter<Locale>
     // 音声入力に使う言語の配列
     private var arrayVoiceLocale: Array<Locale> = arrayOf(Locale.getDefault(), Locale.ENGLISH,Locale.JAPANESE)
+
+    // デフォルトボタン
+    private lateinit var btnDefault: Button
+
+    // OKボタン
+    private lateinit var btnOK: Button
+
+    // Cancelボタン
+    private lateinit var btnCancel: Button
+
+    // OKボタンを押下したことを通知するために用いるリスナー
+    private lateinit var listener: OnUpdateConfListener
+
+    // OKボタンを押下したことを通知するために用いるリスナー
+    interface OnUpdateConfListener {
+        fun updateConf()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +98,42 @@ class ConfFragment : DialogFragment() {
         // アプリ設定の値をビューに反映する
         appConf2View(ctx,appConf)
 
+        // デフォルトボタン
+        btnDefault = view.findViewById(R.id.btnDefault)
+        btnDefault.setOnClickListener {
+            // デフォルト設定にする
+            appConf.goDefault()
+            // アプリ設定をビューへ反映
+            appConf2View(ctx,appConf)
+        }
+
+        // OKボタン
+        btnOK = view.findViewById(R.id.btnOK)
+        btnOK.setOnClickListener {
+
+
+        }
+
+        // Cancelボタン
+        btnCancel = view.findViewById(R.id.btnCancel)
+        btnCancel.setOnClickListener {
+            // 税率その１
+            appConf.tax1 = seekBarTax1.progress.toFloat()
+            // 税率その２
+            appConf.tax2 = seekBarTax2.progress.toFloat()
+            // 対数(x)
+            //   2を最小値とするため、足し算している
+            appConf.logx = (seekBarLogx.progress+2).toFloat()
+            // 音声入力に使う言語
+            appConf.voiceLang = spinVoice.selectedItem as Locale
+
+            // 共有設定へアプリ設定を保存する
+            appl.saveSharedPreferences()
+
+            dismiss()
+        }
+
+
         return view
     }
 
@@ -100,7 +150,7 @@ class ConfFragment : DialogFragment() {
         dataTax2.text = appConf.tax2.toInt().toString()
 
         // log(x)を選択するシークバー
-        seekBarLogx.progress = appConf.logx.toInt()
+        seekBarLogx.progress = appConf.logx.toInt()-2
         // log(x)の値を表示するビュー
         dataLogx.text = appConf.logx.toInt().toString()
 
@@ -114,7 +164,7 @@ class ConfFragment : DialogFragment() {
         super.onActivityCreated(savedInstanceState)
 
         // WindowManager.LayoutParams
-        val lp = dialog.window.attributes
+        val lp = dialog?.window?.attributes ?: return
 
         // DisplayMetrics
         val metrics = resources.displayMetrics

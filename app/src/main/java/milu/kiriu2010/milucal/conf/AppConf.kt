@@ -12,4 +12,17 @@ class AppConf {
     var logx: Float = 2.0f
     // 音声入力に使う言語
     var voiceLang: Locale = Locale.getDefault()
+
+    // デフォルト設定にする
+    fun goDefault() {
+        val appConfDef = AppConf()
+        // 税率その１
+        tax1 = appConfDef.tax1
+        // 税率その２
+        tax2 = appConfDef.tax2
+        // 対数(x)
+        logx = appConfDef.logx
+        // 音声入力に使う言語
+        voiceLang = appConfDef.voiceLang
+    }
 }
