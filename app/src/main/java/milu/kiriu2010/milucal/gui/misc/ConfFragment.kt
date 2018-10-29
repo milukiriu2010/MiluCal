@@ -14,7 +14,12 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
 import java.util.*
 
-class ConfFragment : DialogFragment() {
+class ConfFragment : DialogFragment()
+    , SeekBar.OnSeekBarChangeListener {
+
+    // アプリケーションの設定
+    private lateinit var appConf: AppConf
+
     // Tax1を選択するシークバー
     private lateinit var seekBarTax1: SeekBar
     // Tax1の値を表示するビュー
@@ -71,20 +76,23 @@ class ConfFragment : DialogFragment() {
 
         // アプリケーションの設定
         val appl = ctx.applicationContext as CalApplication
-        val appConf = appl.appConf
+        appConf = appl.appConf
 
         // Tax1を選択するシークバー
         seekBarTax1 = view.findViewById(R.id.seekBarTax1)
+        seekBarTax1.setOnSeekBarChangeListener(this)
         // Tax1の値を表示するビュー
         dataTax1 = view.findViewById(R.id.dataTax1)
 
         // Tax2を選択するシークバー
         seekBarTax2 = view.findViewById(R.id.seekBarTax2)
+        seekBarTax2.setOnSeekBarChangeListener(this)
         // Tax2の値を表示するビュー
         dataTax2 = view.findViewById(R.id.dataTax2)
 
         // log(x)を選択するシークバー
         seekBarLogx = view.findViewById(R.id.seekBarLogx)
+        seekBarLogx.setOnSeekBarChangeListener(this)
         // log(x)の値を表示するビュー
         dataLogx = view.findViewById(R.id.dataLogx)
 
@@ -96,7 +104,7 @@ class ConfFragment : DialogFragment() {
         spinVoice.adapter = adapterVoice
 
         // アプリ設定の値をビューに反映する
-        appConf2View(ctx,appConf)
+        appConf2View()
 
         // デフォルトボタン
         btnDefault = view.findViewById(R.id.btnDefault)
@@ -104,32 +112,31 @@ class ConfFragment : DialogFragment() {
             // デフォルト設定にする
             appConf.goDefault()
             // アプリ設定をビューへ反映
-            appConf2View(ctx,appConf)
+            appConf2View()
         }
 
         // OKボタン
         btnOK = view.findViewById(R.id.btnOK)
         btnOK.setOnClickListener {
-
-
-        }
-
-        // Cancelボタン
-        btnCancel = view.findViewById(R.id.btnCancel)
-        btnCancel.setOnClickListener {
             // 税率その１
-            appConf.tax1 = seekBarTax1.progress.toFloat()
+            appConf.tax1 = dataTax1.text.toString().toFloat()
             // 税率その２
-            appConf.tax2 = seekBarTax2.progress.toFloat()
+            appConf.tax2 = dataTax2.text.toString().toFloat()
             // 対数(x)
-            //   2を最小値とするため、足し算している
-            appConf.logx = (seekBarLogx.progress+2).toFloat()
+            appConf.logx = dataLogx.text.toString().toFloat()
             // 音声入力に使う言語
             appConf.voiceLang = spinVoice.selectedItem as Locale
 
             // 共有設定へアプリ設定を保存する
             appl.saveSharedPreferences()
+            // ダイアログを閉じる
+            dismiss()
+        }
 
+        // Cancelボタン
+        btnCancel = view.findViewById(R.id.btnCancel)
+        btnCancel.setOnClickListener {
+            // ダイアログを閉じる
             dismiss()
         }
 
@@ -138,7 +145,7 @@ class ConfFragment : DialogFragment() {
     }
 
     // アプリ設定の値をビューに反映する
-    fun appConf2View(ctx: Context, appConf: AppConf) {
+    fun appConf2View() {
         // Tax1を選択するシークバー
         seekBarTax1.progress = appConf.tax1.toInt()
         // Tax1の値を表示するビュー
@@ -146,10 +153,12 @@ class ConfFragment : DialogFragment() {
 
         // Tax2を選択するシークバー
         seekBarTax2.progress = appConf.tax2.toInt()
-        // Tax1の値を表示するビュー
+        // Tax2の値を表示するビュー
         dataTax2.text = appConf.tax2.toInt().toString()
 
         // log(x)を選択するシークバー
+        //   シークバーは最小値が必ず0だが、
+        //   log(x)の最小値は2としたいため、2引き算している
         seekBarLogx.progress = appConf.logx.toInt()-2
         // log(x)の値を表示するビュー
         dataLogx.text = appConf.logx.toInt().toString()
@@ -158,6 +167,34 @@ class ConfFragment : DialogFragment() {
         val locale = appConf.voiceLang
         val pos = arrayVoiceLocale.indexOf(locale)
         spinVoice.setSelection(pos)
+    }
+
+    // SeekBar.OnSeekBarChangeListener
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        // シークバーの値をビューに反映
+        seekBar2View()
+    }
+
+    // SeekBar.OnSeekBarChangeListener
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    // SeekBar.OnSeekBarChangeListener
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        // シークバーの値をビューに反映
+        seekBar2View()
+    }
+
+    // シークバーの値をビューに反映
+    private fun seekBar2View() {
+        // Tax1の値を表示するビュー
+        dataTax1.text = seekBarTax1.progress.toString()
+        // Tax2の値を表示するビュー
+        dataTax2.text = seekBarTax2.progress.toString()
+        // log(x)の値を表示するビュー
+        //   シークバーは最小値が必ず0だが、
+        //   log(x)の最小値は2としたいため、2足し算している
+        dataLogx.text = (seekBarLogx.progress+2).toString()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

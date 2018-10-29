@@ -232,7 +232,9 @@ class Cal02Fragment : Fragment() {
             }
         }
 
-        // 音声読み上げ
+        // 音声読み上げの初期化
+        initSpeech()
+        /*
         tts = TextToSpeech(context) { status ->
             if ( status == TextToSpeech.SUCCESS ) {
                 if ( tts.isLanguageAvailable(Locale.getDefault()) >= TextToSpeech.LANG_AVAILABLE ) {
@@ -246,8 +248,45 @@ class Cal02Fragment : Fragment() {
                 Toast.makeText(context, resources.getString(R.string.errmsg_voice_output), Toast.LENGTH_LONG)
             }
         }
+        */
 
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (this::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+
+    // 音声読み上げの初期化
+    private fun initSpeech() {
+        if (this::tts.isInitialized) {
+            tts.shutdown()
+        }
+
+        tts = TextToSpeech(context) { status ->
+            if ( status == TextToSpeech.SUCCESS ) {
+                /*
+                if ( tts.isLanguageAvailable(appConf.voiceLang) >= TextToSpeech.LANG_AVAILABLE ) {
+                    tts.language = appConf.voiceLang
+                }
+                else {
+                    tts.language = Locale.ENGLISH
+                }
+                */
+                if ( tts.isLanguageAvailable(Locale.getDefault()) >= TextToSpeech.LANG_AVAILABLE ) {
+                    tts.language = Locale.getDefault()
+                }
+                else {
+                    tts.language = Locale.ENGLISH
+                }
+            }
+            else {
+                Toast.makeText(context, resources.getString(R.string.errmsg_voice_output), Toast.LENGTH_LONG)
+            }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

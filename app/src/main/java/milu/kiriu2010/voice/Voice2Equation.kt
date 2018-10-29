@@ -4,26 +4,43 @@ class Voice2Equation {
     // 単純な変換マップ
     private val map = mapOf(
         "GO" to "5",
+        "点" to ".",
+        "," to ".",
+        // "x" => "*"の変換が後ろにあるため、最初の方にもってきている
+        "exponential" to "exp(",
         "かっことじ" to ")",
         "かっこ" to "(",
         "たす" to "+",
+        "más" to "+",
         "＋" to "+",
         "引く" to "-",
+        "マイナス" to "-",
+        "menos" to "-",
         "－" to "-",
         "かける" to "*",
         "かけ" to "*",
+        "por" to "*",
+        "x" to "*",
         "×" to "*",
         "わる" to "/",
+        "entre" to "/",
         "÷" to "/",
         "の階乗" to "!",
         "ルート" to "sqrt(",
         "sin" to "sin(",
+        "サイン" to "sin(",
         "cos" to "cos(",
+        "コサイン" to "cos(",
         "tan" to "tan(",
         "タンジェント" to "tan(",
+        "自然対数" to "ln(",
+        "常用対数" to "log(",
+        "指数関数" to "exp(",
         "=" to "",
         "イコール" to "",
-        "は" to ""
+        "は" to "",
+        // "exp(" => "e*p(" に変換されてしまうため
+        "e*p(" to "exp("
     )
 
     // 正規表現を使った変換マップ
