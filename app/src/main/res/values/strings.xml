@@ -12,7 +12,7 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_activity_cal" translatable="false">@string/app_name</string>
     <string name="errmsg_voice_input">Fail to start voice typing</string>
-    <string name="errmsg_voice_output">Fail to start reading aload</string>
+    <string name="errmsg_voice_output">Fail to start reading aloud</string>
     <string name="label_tax1">Tax1(%)</string>
     <string name="label_tax2">Tax2(%)</string>
     <string name="label_logx" translatable="false">log(x)</string>

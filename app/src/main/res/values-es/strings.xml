@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Ajustes</string>
+    <string name="action_about">Sobre mi</string>
+    <string name="action_rate_me">Calificame</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_default">Defecto</string>
+    <string name="action_voice">Hablar por el micro</string>
+    <string name="errmsg_voice_input">No se puede iniciar la escritura de voz</string>
+    <string name="errmsg_voice_output">No comenzar a leer en voz alta</string>
+    <string name="label_tax1">Impuesto1(%)</string>
+    <string name="label_tax2">Impuesto2(%)</string>
+    <string name="label_voice">Idioma para entrada de voz</string>
+    <string name="errmsg_cal_fmt_factorial">error de formato alrededor del operador factorial(!)</string>
+    <string name="errmsg_cal_fmt_power">error de formato alrededor del operador de potencia(^)</string>
+    <string name="errmsg_cal_fmt_multiply">error de formato alrededor del operador multiplicar(*)</string>
+    <string name="errmsg_cal_fmt_divide">error de formato alrededor del operador de división(/)</string>
+    <string name="errmsg_cal_fmt_multiply_divide">error de formato alrededor del operador multiplicar(*) o dividir(/)</string>
+    <string name="errmsg_cal_fmt_number">error de formato: numero</string>
+    <string name="errmsg_cal_divide_zero">dividido por 0</string>
+    <string name="errmsg_cal_no_operand">número no encontrado</string>
+    <string name="errmsg_cal_error">error de cálculo</string>
+    <string name="label_number_of_decimal_places">Número de decimales</string>
+</resources>

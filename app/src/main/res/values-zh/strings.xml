@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">设置</string>
+    <string name="action_about">关于我</string>
+    <string name="action_rate_me">评价我</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_default">默认</string>
+    <string name="action_voice">请跟麦克风说话</string>
+    <string name="errmsg_voice_input">无法开始语音输入</string>
+    <string name="errmsg_voice_output">无法开始大声朗读</string>
+    <string name="label_tax1">税1(%)</string>
+    <string name="label_tax2">税2(%)</string>
+    <string name="label_voice">语音输入语言</string>
+    <string name="errmsg_cal_fmt_factorial">factorial(!)运算符周围的格式错误</string>
+    <string name="errmsg_cal_fmt_power">power(^)运算符周围的格式错误</string>
+    <string name="errmsg_cal_fmt_multiply">乘法(*)运算符周围的格式错误</string>
+    <string name="errmsg_cal_fmt_divide">除法(/)运算符周围的格式错误</string>
+    <string name="errmsg_cal_fmt_multiply_divide">乘法(*)或除法(/)运算符周围的格式错误</string>
+    <string name="errmsg_cal_fmt_number">格式错误：数字</string>
+    <string name="errmsg_cal_divide_zero">除以0</string>
+    <string name="errmsg_cal_no_operand">找不到号码</string>
+    <string name="errmsg_cal_error">计算错误</string>
+    <string name="label_number_of_decimal_places">小数位数</string>
+</resources>

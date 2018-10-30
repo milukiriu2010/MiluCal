@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Réglages</string>
+    <string name="action_about">À propos de moi</string>
+    <string name="action_rate_me">Notez moi</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_default">Défaut</string>
+    <string name="action_voice">Parlez dans le micro</string>
+    <string name="errmsg_voice_input">Échec de la saisie vocale</string>
+    <string name="errmsg_voice_output">Ne pas commencer à lire à voix haute</string>
+    <string name="label_tax1">Impôt1(%)</string>
+    <string name="label_tax2">Impôt2(%)</string>
+    <string name="label_voice">Langue pour la saisie vocale</string>
+    <string name="errmsg_cal_fmt_factorial">erreur de format autour de l\'opérateur factoriel(!)</string>
+    <string name="errmsg_cal_fmt_power">erreur de format autour de l\'opérateur power(^)</string>
+    <string name="errmsg_cal_fmt_multiply">erreur de format autour de l\'opérateur multiplier(*)</string>
+    <string name="errmsg_cal_fmt_divide">erreur de format autour de l\'opérateur divide(/)</string>
+    <string name="errmsg_cal_fmt_multiply_divide">erreur de format autour de l\'opérateur multiplier(*) ou diviser(/)</string>
+    <string name="errmsg_cal_fmt_number">erreur de format: nombre</string>
+    <string name="errmsg_cal_divide_zero">divisé par 0</string>
+    <string name="errmsg_cal_no_operand">nombre non trouvé</string>
+    <string name="errmsg_cal_error">erreur de calcul</string>
+    <string name="label_number_of_decimal_places">Nombre de décimales</string>
+</resources>

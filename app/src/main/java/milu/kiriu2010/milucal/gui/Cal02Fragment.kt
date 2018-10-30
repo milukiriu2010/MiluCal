@@ -284,7 +284,8 @@ class Cal02Fragment : Fragment() {
         //imm.hideSoftInputFromWindow( view?.windowToken, 0)
 
 
-        //activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        // キーボードを非表示にする
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
     // 式に文字挿入
