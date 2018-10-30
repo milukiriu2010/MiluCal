@@ -356,7 +356,7 @@ class ContextCal(
                                 //tokenLst[index-1] = Math.cos( Math.toRadians(num.toDouble()) ).toString()
                                 //tokenLst[index-1] = cos( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
                                 //tokenLst[index-1] = Math.cos( Math.toRadians(num.toDouble()) ).toString()
-                                tokenLst[index-1] = "%.7f".format(Math.cos( Math.toRadians(num.toDouble()) ))
+                                tokenLst[index-1] = "%.10f".format(Math.cos( Math.toRadians(num.toDouble()) ))
                                 ite.remove()
                                 index--
                             }
@@ -365,7 +365,7 @@ class ContextCal(
                                 //tokenLst[index-1] = Math.sin( Math.toRadians(num.toDouble()) ).toString()
                                 // sin(30) = 0.49999999
                                 //tokenLst[index-1] = sin( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
-                                tokenLst[index-1] = "%.7f".format(Math.sin( Math.toRadians(num.toDouble()) ))
+                                tokenLst[index-1] = "%.10f".format(Math.sin( Math.toRadians(num.toDouble()) ))
                                 //Log.d( javaClass.simpleName, "num=%.7f".format(num.toDouble()))
                                 //Log.d( javaClass.simpleName, "sin(30org)=%.7f".format(Math.sin( Math.toRadians(num.toDouble()) )))
                                 //Log.d( javaClass.simpleName, "sin(30)=%.7f".format(Math.sin(Math.toRadians(30.0))))
@@ -377,7 +377,7 @@ class ContextCal(
                                 //tokenLst[index-1] = Math.tan( Math.toRadians(num.toDouble()) ).toString()
                                 //tokenLst[index-1] = tan( (num*PI.toBigDecimal()).divide(180.toBigDecimal(),MathContext.DECIMAL128).toDouble() ).toString()
                                 //tokenLst[index-1] = Math.tan( Math.toRadians(num.toDouble()) ).toString()
-                                tokenLst[index-1] = "%.7f".format(Math.tan( Math.toRadians(num.toDouble()) ))
+                                tokenLst[index-1] = "%.10f".format(Math.tan( Math.toRadians(num.toDouble()) ))
                                 ite.remove()
                                 index--
                             }
@@ -423,7 +423,7 @@ class ContextCal(
                     // 左となりの演算子が数値でない場合、
                     // エラー
                     else {
-                        throw CalException("the value should be number before factorial mark'!'")
+                        throw CalException(CalException.ErrType.ERR_FMT_FACTORIAL,"the value should be number before factorial mark'!'")
                     }
                 }
                 else -> {
@@ -463,7 +463,7 @@ class ContextCal(
                     // 右となりの演算子が数値でない場合
                     // 数式がおかしいということでエラーとする
                     if ( prevCalType != CalType.NUM ) {
-                        throw CalException("the right side of the operator '^' is something weird")
+                        throw CalException(CalException.ErrType.ERR_FMT_POWER,"the right side of the operator '^' is something weird")
                     }
                     prevCalType = CalType.OPERATOR_POW
                 }
@@ -532,7 +532,7 @@ class ContextCal(
                         prevCalType = CalType.OPERATOR_MULTI
                     }
                     else {
-                        throw CalException("value should be number before operator'*'")
+                        throw CalException(CalException.ErrType.ERR_FMT_MULTIPLY,"value should be number before operator'*'")
                     }
                 }
                 // 除算
@@ -544,7 +544,7 @@ class ContextCal(
                         prevCalType = CalType.OPERATOR_DIV
                     }
                     else {
-                        throw CalException("value should be number before operator'/'")
+                        throw CalException(CalException.ErrType.ERR_FMT_DIVIDE,"value should be number before operator'/'")
                     }
                 }
                 // 加算
@@ -577,7 +577,7 @@ class ContextCal(
                                 tokenLst[index-1] = tokenLst[index-1].toBigDecimal().divide(num, MathContext.DECIMAL128).toString()
                             }
                             else {
-                                throw CalException("divide by 0")
+                                throw CalException(CalException.ErrType.ERR_DIVIDE_ZERO,"divide by 0")
                             }
                             ite.remove()
                             index--
@@ -585,7 +585,7 @@ class ContextCal(
                         prevCalType = CalType.NUM
                     }
                     else {
-                        throw CalException("format error for multiple/divide")
+                        throw CalException(CalException.ErrType.ERR_FMT_MULTIPLY_DIVIDE,"format error for multiple / divide")
                     }
                 }
             }
@@ -626,7 +626,7 @@ class ContextCal(
                             num -= str.toBigDecimal()
                         }
                         else {
-                            throw CalException("${tokenLst[0]} has no operand.")
+                            throw CalException(CalException.ErrType.ERR_NO_OPERAND,"${tokenLst[0]} has no operand.")
                         }
 
                         prevCalType = CalType.NUM
@@ -636,7 +636,7 @@ class ContextCal(
             }
         }
         catch ( ex: NumberFormatException ) {
-            throw CalException("${tokenLst[0]} is not number.")
+            throw CalException(CalException.ErrType.ERR_FMT_NUMBER,"${tokenLst[0]} is not number.")
         }
 
         return num

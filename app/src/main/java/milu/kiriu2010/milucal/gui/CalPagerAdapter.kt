@@ -10,7 +10,7 @@ class CalPagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {
     private lateinit var cal02Fragment: Cal02Fragment
 
     // ページ数
-    private val pageCnt = 2
+    private val pageCnt = 1
 
     override fun getItem(pos: Int): Fragment {
         return when(pos) {
@@ -18,19 +18,19 @@ class CalPagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {
                 if ( !this::cal02Fragment.isInitialized ) {
                     cal02Fragment = Cal02Fragment.newInstance()
                 }
-                return cal02Fragment
+                cal02Fragment
             }
             1 -> {
                 if ( !this::cal01Fragment.isInitialized ) {
                     cal01Fragment = Cal01Fragment.newInstance()
                 }
-                return cal01Fragment
+                cal01Fragment
             }
             else -> {
                 if ( !this::cal02Fragment.isInitialized ) {
                     cal02Fragment = Cal02Fragment.newInstance()
                 }
-                return cal02Fragment
+                cal02Fragment
             }
         }
     }

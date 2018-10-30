@@ -17,4 +17,14 @@
     <string name="label_tax2">Tax2(%)</string>
     <string name="label_logx" translatable="false">log(x)</string>
     <string name="label_voice">Language for Voice Input</string>
+    <string name="errmsg_cal_fmt_factorial">format error around factorial(!) operator</string>
+    <string name="errmsg_cal_fmt_power">format error around power(^) operator</string>
+    <string name="errmsg_cal_fmt_multiply">format error around multiply(*) operator</string>
+    <string name="errmsg_cal_fmt_divide">format error around divide(/) operator</string>
+    <string name="errmsg_cal_fmt_multiply_divide">format error around multiply(*) or divide(/) operator</string>
+    <string name="errmsg_cal_fmt_number">format error: number</string>
+    <string name="errmsg_cal_divide_zero">divided by 0</string>
+    <string name="errmsg_cal_no_operand">not found number</string>
+    <string name="errmsg_cal_error">calculation error</string>
+    <string name="label_number_of_decimal_places">Number of decimal places</string>
 </resources>

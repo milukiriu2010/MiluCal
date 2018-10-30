@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
+import milu.kiriu2010.calv2.CalException
 import milu.kiriu2010.calv2.ContextCal
 import milu.kiriu2010.milucal.CalApplication
 
@@ -21,6 +22,7 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
 import milu.kiriu2010.milucal.id.RequestID
 import milu.kiriu2010.voice.Voice2Equation
+import java.text.DecimalFormat
 import java.util.*
 
 
@@ -234,21 +236,6 @@ class Cal02Fragment : Fragment() {
 
         // 音声読み上げの初期化
         initSpeech()
-        /*
-        tts = TextToSpeech(context) { status ->
-            if ( status == TextToSpeech.SUCCESS ) {
-                if ( tts.isLanguageAvailable(Locale.getDefault()) >= TextToSpeech.LANG_AVAILABLE ) {
-                    tts.language = Locale.getDefault()
-                }
-                else {
-                    tts.language = Locale.US
-                }
-            }
-            else {
-                Toast.makeText(context, resources.getString(R.string.errmsg_voice_output), Toast.LENGTH_LONG)
-            }
-        }
-        */
 
         return view
     }
@@ -295,7 +282,9 @@ class Cal02Fragment : Fragment() {
         // キーボードを閉じる
         //val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         //imm.hideSoftInputFromWindow( view?.windowToken, 0)
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
+
+        //activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
     // 式に文字挿入
@@ -343,7 +332,6 @@ class Cal02Fragment : Fragment() {
         // 現在のカーソル位置
         val posS = dataEQ.selectionStart
         // 現在のカーソル位置が最後尾なら何もしない
-        //if ( posS == (str.length-1) ) return
         if ( posS == str.length ) return
 
         if (str.length > 0) {
@@ -381,13 +369,57 @@ class Cal02Fragment : Fragment() {
 
         try {
             val num = ctxCal.execute()
+            val numScale = num.scale()
+            val numPrecision = num.precision()
+            Log.d( javaClass.simpleName, "ans[$num]scale[$numScale]precision[$numPrecision]")
+
+            val strNum = when {
+                // 整数部のみ
+                ( numScale <= 0 ) -> { "%d".format(num.toInt()) }
+                // 小数部の桁数が、設定"小数点以下の桁数"より短い場合
+                ( numScale > 0 ) and ( appConf.numDecimalPlaces > numScale ) -> {
+                    var strScale = StringBuffer()
+                    (1..numScale).forEach { strScale.append("#") }
+                    val decimalFmt = DecimalFormat("###." + strScale )
+                    decimalFmt.format(num)
+                }
+                // 小数部の桁数が、設定"小数点以下の桁数"より長い場合
+                else -> {
+                    var strScale = StringBuffer()
+                    (1..appConf.numDecimalPlaces).forEach { strScale.append("#") }
+                    val decimalFmt = DecimalFormat("###." + strScale )
+                    decimalFmt.format(num)
+                }
+            }
 
             // 計算結果を表示
-            dataResult.setText(num.toString())
+            //dataResult.setText(num.toString())
+            dataResult.setText(strNum)
+        }
+        catch ( calEx: CalException ) {
+            calEx.printStackTrace()
+            // エラー結果を表示
+            //dataResult.setText(ex.message)
+
+            val errType = calEx.errType
+            val errId = when (errType) {
+                CalException.ErrType.ERR_FMT_FACTORIAL -> R.string.errmsg_cal_fmt_factorial
+                CalException.ErrType.ERR_FMT_POWER -> R.string.errmsg_cal_fmt_power
+                CalException.ErrType.ERR_FMT_MULTIPLY -> R.string.errmsg_cal_fmt_multiply
+                CalException.ErrType.ERR_FMT_DIVIDE -> R.string.errmsg_cal_fmt_divide
+                CalException.ErrType.ERR_FMT_MULTIPLY_DIVIDE -> R.string.errmsg_cal_fmt_multiply_divide
+                CalException.ErrType.ERR_FMT_NUMBER -> R.string.errmsg_cal_fmt_number
+                CalException.ErrType.ERR_DIVIDE_ZERO -> R.string.errmsg_cal_divide_zero
+                CalException.ErrType.ERR_NO_OPERAND -> R.string.errmsg_cal_no_operand
+                else -> R.string.errmsg_cal_error
+            }
+            // エラー結果を表示
+            dataResult.setText(resources.getString(errId))
         }
         catch ( ex: Exception ) {
+            ex.printStackTrace()
             // エラー結果を表示
-            dataResult.setText(ex.message)
+            dataResult.setText(resources.getString(R.string.errmsg_cal_error))
         }
 
         // 音声読み上げ
@@ -417,7 +449,7 @@ class Cal02Fragment : Fragment() {
             RequestID.ID_VOICE.id -> {
                 // 認識結果のうち最初のものを採用する
                 val candidates = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) ?: listOf<String>()
-                if (candidates.size > 0 ) {
+                if ( candidates.size > 0 ) {
                     val strVoice = candidates[0]
 
                     Log.d( javaClass.simpleName, "voice[$strVoice]")
@@ -431,6 +463,7 @@ class Cal02Fragment : Fragment() {
         }
     }
 
+    // 音声テキストを数式に変換し、計算を実行する
     private fun voiceControl( strOrg: String ) {
         Log.d( javaClass.simpleName, "変換前:${strOrg}")
         val v2e = Voice2Equation()

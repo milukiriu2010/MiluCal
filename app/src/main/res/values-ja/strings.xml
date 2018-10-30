@@ -11,4 +11,14 @@
     <string name="label_tax1">税率1(%)</string>
     <string name="label_tax2">税率2(%)</string>
     <string name="label_voice">音声入力に使う言語</string>
+    <string name="errmsg_cal_fmt_factorial">階乗(!)演算子周辺にフォーマットエラーがあります</string>
+    <string name="errmsg_cal_fmt_power">べき乗(^)演算子周辺にフォーマットエラーがあります</string>
+    <string name="errmsg_cal_fmt_multiply">乗算(*)演算子周辺にフォーマットエラーがあります</string>
+    <string name="errmsg_cal_fmt_divide">除算(/)演算子周辺にフォーマットエラーがあります</string>
+    <string name="errmsg_cal_fmt_multiply_divide">乗算(*)または除算(/)演算子周辺にフォーマットエラーがあります</string>
+    <string name="errmsg_cal_fmt_number">数値にフォーマットエラーがあります</string>
+    <string name="errmsg_cal_divide_zero">0で除算しています</string>
+    <string name="errmsg_cal_no_operand">数値が見つかりません</string>
+    <string name="errmsg_cal_error">計算エラー</string>
+    <string name="label_number_of_decimal_places">小数点以下の桁数</string>
 </resources>

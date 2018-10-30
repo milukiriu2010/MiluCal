@@ -35,6 +35,11 @@ class ConfFragment : DialogFragment()
     // log(x)の値を表示するビュー
     private lateinit var dataLogx: TextView
 
+    // 小数点以下の桁数を選択するシークバー
+    private lateinit var seekBarNumDecimalPlaces: SeekBar
+    // 小数点以下の桁数を表示するビュー
+    private lateinit var dataNumDecimalPlaces: TextView
+
     // 音声入力に使う言語のスピン
     private lateinit var spinVoice: Spinner
     // 音声入力に使う言語のアダプタ
@@ -96,6 +101,12 @@ class ConfFragment : DialogFragment()
         // log(x)の値を表示するビュー
         dataLogx = view.findViewById(R.id.dataLogx)
 
+        // 小数点以下の桁数を選択するシークバー
+        seekBarNumDecimalPlaces = view.findViewById(R.id.seekBarNumDecimalPlaces)
+        seekBarNumDecimalPlaces.setOnSeekBarChangeListener(this)
+        // 小数点以下の桁数を表示するビュー
+        dataNumDecimalPlaces = view.findViewById(R.id.dataNumDecimalPlaces)
+
         // 音声入力に使う言語のアダプタ
         //adapterVoice = ArrayAdapter<String>(ctx, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.voice_lang_array))
         adapterVoice = ArrayAdapter<Locale>(ctx, android.R.layout.simple_spinner_item, arrayVoiceLocale)
@@ -124,6 +135,8 @@ class ConfFragment : DialogFragment()
             appConf.tax2 = dataTax2.text.toString().toFloat()
             // 対数(x)
             appConf.logx = dataLogx.text.toString().toFloat()
+            // 小数点以下の桁数
+            appConf.numDecimalPlaces = dataNumDecimalPlaces.text.toString().toInt()
             // 音声入力に使う言語
             appConf.voiceLang = spinVoice.selectedItem as Locale
 
@@ -163,6 +176,13 @@ class ConfFragment : DialogFragment()
         // log(x)の値を表示するビュー
         dataLogx.text = appConf.logx.toInt().toString()
 
+        // 小数点以下の桁数を選択するシークバー
+        //   シークバーは最小値が必ず0だが、
+        //   小数点以下の桁数の最小値は1としたいため、1引き算している
+        seekBarNumDecimalPlaces.progress = appConf.numDecimalPlaces-1
+        // 小数点以下の桁数を表示するビュー
+        dataNumDecimalPlaces.text = appConf.numDecimalPlaces.toString()
+
         // 音声入力に使う言語スピン
         val locale = appConf.voiceLang
         val pos = arrayVoiceLocale.indexOf(locale)
@@ -195,6 +215,10 @@ class ConfFragment : DialogFragment()
         //   シークバーは最小値が必ず0だが、
         //   log(x)の最小値は2としたいため、2足し算している
         dataLogx.text = (seekBarLogx.progress+2).toString()
+        // 小数点以下の桁数を選択するシークバー
+        //   シークバーは最小値が必ず0だが、
+        //   小数点以下の桁数の最小値は1としたいため、1引き算している
+        dataNumDecimalPlaces.text = (seekBarNumDecimalPlaces.progress+1).toString()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

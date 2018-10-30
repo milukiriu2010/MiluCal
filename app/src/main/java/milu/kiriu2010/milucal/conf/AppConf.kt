@@ -10,6 +10,8 @@ class AppConf {
     var tax2: Float = 10.0f
     // 対数(x)
     var logx: Float = 2.0f
+    // 小数点以下の桁数
+    var numDecimalPlaces: Int = 10
     // 音声入力に使う言語
     var voiceLang: Locale = Locale.getDefault()
 

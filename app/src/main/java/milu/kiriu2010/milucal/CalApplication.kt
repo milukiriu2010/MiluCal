@@ -13,7 +13,8 @@ class CalApplication: Application() {
         NAME_APP_CONF("appConf"),
         KEY_TAX1("tax1"),
         KEY_TAX2("tax2"),
-        KEY_LOGX("logx")
+        KEY_LOGX("logx"),
+        KEY_NUM_DECIMAL_PLACES("numDecimalPlaces")
     }
 
     // -------------------------------------
@@ -39,6 +40,8 @@ class CalApplication: Application() {
         appConf.tax2 = sp.getFloat(SpKey.KEY_TAX2.id,appConfDef.tax2)
         // 共有設定から"対数(x)を取得
         appConf.logx = sp.getFloat(SpKey.KEY_LOGX.id,appConfDef.logx)
+        // 共有設定から"小数点以下の桁数"を取得
+        appConf.numDecimalPlaces = sp.getInt(SpKey.KEY_NUM_DECIMAL_PLACES.id,appConfDef.numDecimalPlaces)
     }
 
     // 共有設定へアプリ設定を保存する
@@ -54,6 +57,8 @@ class CalApplication: Application() {
             .putFloat(SpKey.KEY_TAX2.id,appConf.tax2)
             // 共有設定へ"対数(x)"を保存
             .putFloat(SpKey.KEY_LOGX.id,appConf.logx)
+            // 共有設定へ"小数点以下の桁数"を保存
+            .putInt(SpKey.KEY_NUM_DECIMAL_PLACES.id,appConf.numDecimalPlaces)
             .commit()
     }
 }
