@@ -10,10 +10,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".gui.MainActivity">
+        <activity android:name=".gui.func.MainActivity">
         </activity>
         <activity
-                android:name=".gui.CalActivity"
+                android:name=".gui.func.CalActivity"
                 android:label="@string/title_activity_cal"
                 android:theme="@style/AppTheme">
             <intent-filter>

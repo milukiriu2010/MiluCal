@@ -1,7 +1,8 @@
-package milu.kiriu2010.milucal.gui
+package milu.kiriu2010.milucal.gui.func
 
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -21,7 +22,9 @@ import milu.kiriu2010.milucal.CalApplication
 import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
 import milu.kiriu2010.milucal.id.RequestID
+import milu.kiriu2010.util.MyTool
 import milu.kiriu2010.voice.Voice2Equation
+import java.lang.RuntimeException
 import java.text.DecimalFormat
 import java.util.*
 
@@ -36,6 +39,8 @@ class Cal02Fragment : Fragment() {
     private lateinit var dataResult: TextView
     // 音声読み上げ
     private lateinit var tts: TextToSpeech
+    // 計算データを履歴に格納するためのコールバック
+    private var historyCallback: OnHistoryCallback? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -370,6 +375,7 @@ class Cal02Fragment : Fragment() {
 
         try {
             val num = ctxCal.execute()
+            /*
             val numScale = num.scale()
             val numPrecision = num.precision()
             Log.d( javaClass.simpleName, "ans[$num]scale[$numScale]precision[$numPrecision]")
@@ -392,17 +398,18 @@ class Cal02Fragment : Fragment() {
                     decimalFmt.format(num)
                 }
             }
+            */
+            // 数値(BigDecimal)を文字列に変換
+            val strNum = MyTool.fromBigDeimal2String(num,appConf.numDecimalPlaces)
 
             // 計算結果を表示
-            //dataResult.setText(num.toString())
             dataResult.setText(strNum)
         }
         catch ( calEx: CalException ) {
             calEx.printStackTrace()
-            // エラー結果を表示
-            //dataResult.setText(ex.message)
-
+            // エラータイプ
             val errType = calEx.errType
+            // エラーメッセージを生成
             val errId = when (errType) {
                 CalException.ErrType.ERR_FMT_FACTORIAL -> R.string.errmsg_cal_fmt_factorial
                 CalException.ErrType.ERR_FMT_POWER -> R.string.errmsg_cal_fmt_power
@@ -476,6 +483,23 @@ class Cal02Fragment : Fragment() {
 
         // 計算実行
         calcExec(true)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if ( context is OnHistoryCallback) {
+            historyCallback = context
+        }
+        else {
+            throw RuntimeException("context must implement OnHistoryCallback")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        if ( historyCallback != null ) {
+            historyCallback = null
+        }
     }
 
     companion object {

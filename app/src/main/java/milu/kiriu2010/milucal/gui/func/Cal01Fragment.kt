@@ -1,9 +1,8 @@
-package milu.kiriu2010.milucal.gui
+package milu.kiriu2010.milucal.gui.func
 
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

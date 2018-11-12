@@ -12,6 +12,8 @@ class AppConf {
     var logx: Float = 2.0f
     // 小数点以下の桁数
     var numDecimalPlaces: Int = 10
+    // 計算データの履歴最大数
+    var historyCnt: Int = 10
     // 音声入力に使う言語
     var voiceLang: Locale = Locale.getDefault()
 
@@ -27,4 +29,5 @@ class AppConf {
         // 音声入力に使う言語
         voiceLang = appConfDef.voiceLang
     }
+
 }
