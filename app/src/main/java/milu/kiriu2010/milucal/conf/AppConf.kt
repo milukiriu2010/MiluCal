@@ -14,7 +14,9 @@ class AppConf {
     var numDecimalPlaces: Int = 10
     // 計算データの履歴最大数
     var historyCnt: Int = 10
-    // 音声入力に使う言語
+    // スクリーンを常にON(true:ON/false:OFF)
+    var screenOn: Boolean = false
+    // 音声入力に使う言語(現在：未使用)
     var voiceLang: Locale = Locale.getDefault()
 
     // デフォルト設定にする
@@ -26,6 +28,8 @@ class AppConf {
         tax2 = appConfDef.tax2
         // 対数(x)
         logx = appConfDef.logx
+        // スクリーンを常にON(true:ON/false:OFF)
+        screenOn = appConfDef.screenOn
         // 音声入力に使う言語
         voiceLang = appConfDef.voiceLang
     }

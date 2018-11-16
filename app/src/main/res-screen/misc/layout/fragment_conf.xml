@@ -88,8 +88,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/labelVoice" app:layout_constraintStart_toStartOf="@+id/labelLogx"
-            android:visibility="invisible" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/labelNumDecimalPlaces"/>
+            android:visibility="invisible"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/labelScreenOn"/>
     <Spinner
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:layout_marginRight="16dp"
@@ -151,5 +151,23 @@
             android:layout_marginRight="8dp"
             app:layout_constraintTop_toTopOf="@+id/labelNumDecimalPlaces"
             app:layout_constraintBottom_toBottomOf="@+id/labelNumDecimalPlaces" android:progress="9"/>
+    <TextView
+            android:text="@string/label_screen_on"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/labelScreenOn"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/labelNumDecimalPlaces"
+            app:layout_constraintStart_toStartOf="@+id/labelNumDecimalPlaces"
+            app:layout_constraintEnd_toEndOf="@+id/dataNumDecimalPlaces"
+    />
+    <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/switchScreenOn" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" app:layout_constraintStart_toEndOf="@+id/labelScreenOn"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/labelScreenOn"
+            app:layout_constraintBottom_toBottomOf="@+id/labelScreenOn" app:layout_constraintHorizontal_bias="1.0"/>
 
 </android.support.constraint.ConstraintLayout>

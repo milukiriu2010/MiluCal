@@ -15,7 +15,8 @@ class CalApplication: Application() {
         KEY_TAX2("tax2"),
         KEY_LOGX("logx"),
         KEY_NUM_DECIMAL_PLACES("numDecimalPlaces"),
-        KEY_HISTORY_CNT("historyCnt")
+        KEY_HISTORY_CNT("historyCnt"),
+        KEY_SCREEN_ON("screenOn")
     }
 
     // -------------------------------------
@@ -45,6 +46,8 @@ class CalApplication: Application() {
         appConf.numDecimalPlaces = sp.getInt(SpKey.KEY_NUM_DECIMAL_PLACES.id,appConfDef.numDecimalPlaces)
         // 共有設定から"計算データの履歴最大数"を取得
         appConf.historyCnt = sp.getInt(SpKey.KEY_HISTORY_CNT.id,appConfDef.historyCnt)
+        // 共有設定から"スクリーンを常にON"を取得
+        appConf.screenOn = sp.getBoolean(SpKey.KEY_SCREEN_ON.id,appConfDef.screenOn)
     }
 
     // 共有設定へアプリ設定を保存する
@@ -64,6 +67,8 @@ class CalApplication: Application() {
             .putInt(SpKey.KEY_NUM_DECIMAL_PLACES.id,appConf.numDecimalPlaces)
             // 共有設定へ"計算データの履歴最大数"を保存
             .putInt(SpKey.KEY_HISTORY_CNT.id,appConf.historyCnt)
+            // 共有設定へ"スクリーンを常にON"を保存
+            .putBoolean(SpKey.KEY_SCREEN_ON.id,appConf.screenOn)
             .commit()
     }
 }

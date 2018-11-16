@@ -6,13 +6,17 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import milu.kiriu2010.milucal.R
+import milu.kiriu2010.milucal.entity.CalData
+import milu.kiriu2010.util.LimitedArrayList
 
-class CalHistory01Fragment : Fragment() {
+class CalHistory01Fragment : Fragment()
+    , OnHistoryCallback {
 
     // 計算データの履歴リサイクラービュー
     private lateinit var recyclerViewHistory: RecyclerView
@@ -54,6 +58,19 @@ class CalHistory01Fragment : Fragment() {
         return view
     }
 
+    // OnHistoryCallback
+    // 履歴に計算データを格納
+    override fun put(calData: CalData) {}
+
+    // OnHistoryCallback
+    // 計算履歴を通知
+    override fun onUpdate(calDataLst: LimitedArrayList<CalData>) {
+        Log.d(javaClass.simpleName, "onUpdate:calDataLst[${calDataLst.size}]")
+        // アダプタの内容を再描画
+        adapter.calDataLst.clear()
+        adapter.calDataLst.addAll(calDataLst)
+        adapter.notifyDataSetChanged()
+    }
 
     companion object {
         @JvmStatic

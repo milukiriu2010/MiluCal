@@ -28,4 +28,5 @@
     <string name="errmsg_cal_error">calculation error</string>
     <string name="label_number_of_decimal_places">Number of decimal places</string>
     <string name="label_calculation_history">Calculation History</string>
+    <string name="label_screen_on">Keep screen on</string>
 </resources>

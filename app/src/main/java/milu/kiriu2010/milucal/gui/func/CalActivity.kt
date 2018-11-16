@@ -17,7 +17,8 @@ import milu.kiriu2010.milucal.id.FragmentID
 import milu.kiriu2010.util.LimitedArrayList
 
 class CalActivity : AppCompatActivity()
-    , OnHistoryCallback {
+    , OnHistoryCallback
+    , OnHistoryGetCallback {
 
     // アプリ設定
     private lateinit var appConf: AppConf
@@ -27,7 +28,8 @@ class CalActivity : AppCompatActivity()
 
     // 計算データの履歴
     private lateinit var calDataLst: LimitedArrayList<CalData>
-
+    // 履歴データを表示するときの履歴位置
+    private var historyPos = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +77,106 @@ class CalActivity : AppCompatActivity()
     // OnHistoryCallback
     // 履歴に計算データを格納
     override fun put(calData: CalData) {
-        calDataLst.add(calData)
+        // 履歴位置をクリア
+        historyPos = 0
+        // 履歴に計算データを格納
+        calDataLst.add(0,calData)
+
+        // 履歴が追加されたことを関連フラグメントに通知
+        for ( i in 0 until calPagerAdapter!!.count ) {
+            val fragment = calPagerAdapter?.getItem(i) as? OnHistoryCallback
+                ?: continue
+            fragment.onUpdate(calDataLst)
+        }
     }
+
+    // OnHistoryCallback
+    // 計算履歴を通知
+    override fun onUpdate(calDataLst: LimitedArrayList<CalData>) {}
+
+    // OnHistoryGetCallback
+    // 履歴取得1つ前
+    override fun getHistoryPrev(): CalData =
+        // 履歴をはじめてたどる場合
+        if ( historyPos == -1 ) {
+            // 履歴がない場合,空データを返す
+            if ( calDataLst.size == 0 ) {
+                CalData()
+            }
+            // 履歴がある場合,最後を返す
+            else {
+                historyPos = 0
+                calDataLst[historyPos]
+            }
+        }
+        // 履歴を連続でたどる場合
+        else {
+            // 履歴番号を１つ増やす
+            historyPos++
+            // 履歴サイズより大きい場合,履歴サイズ-1に補正
+            if ( historyPos >= calDataLst.size ) {
+                historyPos = calDataLst.size-1
+            }
+            calDataLst[historyPos]
+        }
+    /*
+        // 履歴をはじめてたどる場合
+        if ( historyPos == -1 ) {
+            // 履歴がない場合,空データを返す
+            if ( calDataLst.size == 0 ) {
+                CalData()
+            }
+            // 履歴がある場合,最後を返す
+            else {
+                historyPos = calDataLst.size-1
+                calDataLst.last()
+            }
+        }
+        // 履歴を連続でたどる場合
+        else {
+            // 履歴番号を１つ減らす
+            historyPos--
+            // 履歴番号が0より下の場合,0に補正
+            if ( historyPos < 0 ) {
+                historyPos = 0
+            }
+            calDataLst[historyPos]
+        }
+*/
+
+    // OnHistoryGetCallback
+    // 履歴取得1つ次
+    override fun getHistoryNext(): CalData =
+        // 履歴をはじめてたどる場合
+        if ( historyPos == -1 ) {
+            // 空データを返す
+            CalData()
+        }
+        // 履歴を連続でたどる場合
+        else {
+            // 履歴番号を１つ減らす
+            historyPos--
+            // 履歴番号が0より下の場合,0に補正
+            if ( historyPos < 0 ) {
+                historyPos = 0
+            }
+            calDataLst[historyPos]
+        }
+    /*
+        // 履歴をはじめてたどる場合
+        if ( historyPos == -1 ) {
+            // 空データを返す
+            CalData()
+        }
+        // 履歴を連続でたどる場合
+        else {
+            // 履歴番号を１つ増やす
+            historyPos++
+            // 履歴番号が履歴サイズより大きい場合,履歴サイズ-1に補正
+            if ( historyPos >= calDataLst.size ) {
+                historyPos = calDataLst.size-1
+            }
+            calDataLst[historyPos]
+        }
+        */
 }

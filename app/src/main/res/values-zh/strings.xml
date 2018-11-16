@@ -21,4 +21,6 @@
     <string name="errmsg_cal_no_operand">找不到号码</string>
     <string name="errmsg_cal_error">计算错误</string>
     <string name="label_number_of_decimal_places">小数位数</string>
+    <string name="label_calculation_history">计算记录</string>
+    <string name="label_screen_on">保持屏幕</string>
 </resources>

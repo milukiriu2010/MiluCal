@@ -21,4 +21,6 @@
     <string name="errmsg_cal_no_operand">nombre non trouvé</string>
     <string name="errmsg_cal_error">erreur de calcul</string>
     <string name="label_number_of_decimal_places">Nombre de décimales</string>
+    <string name="label_calculation_history">enregistrement de calcul</string>
+    <string name="label_screen_on">Gardez l\\\'écran allumé</string>
 </resources>

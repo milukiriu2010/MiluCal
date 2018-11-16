@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import milu.kiriu2010.milucal.CalApplication
 
@@ -39,6 +40,10 @@ class ConfFragment : DialogFragment()
     private lateinit var seekBarNumDecimalPlaces: SeekBar
     // 小数点以下の桁数を表示するビュー
     private lateinit var dataNumDecimalPlaces: TextView
+
+    // スクリーンONスイッチ
+    private lateinit var switchScreenOn: Switch
+
 
     // 音声入力に使う言語のスピン
     private lateinit var spinVoice: Spinner
@@ -107,6 +112,9 @@ class ConfFragment : DialogFragment()
         // 小数点以下の桁数を表示するビュー
         dataNumDecimalPlaces = view.findViewById(R.id.dataNumDecimalPlaces)
 
+        // スクリーンONスイッチ
+        switchScreenOn = view.findViewById(R.id.switchScreenOn)
+
         // 音声入力に使う言語のアダプタ
         //adapterVoice = ArrayAdapter<String>(ctx, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.voice_lang_array))
         adapterVoice = ArrayAdapter<Locale>(ctx, android.R.layout.simple_spinner_item, arrayVoiceLocale)
@@ -137,6 +145,18 @@ class ConfFragment : DialogFragment()
             appConf.logx = dataLogx.text.toString().toFloat()
             // 小数点以下の桁数
             appConf.numDecimalPlaces = dataNumDecimalPlaces.text.toString().toInt()
+
+            // "スクリーンON"に対応する更新を実施
+            appConf.screenOn = switchScreenOn.isChecked
+            // ON
+            if ( appConf.screenOn ) {
+                activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+            // OFF
+            else {
+                activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+
             // 音声入力に使う言語
             appConf.voiceLang = spinVoice.selectedItem as Locale
 
@@ -182,6 +202,9 @@ class ConfFragment : DialogFragment()
         seekBarNumDecimalPlaces.progress = appConf.numDecimalPlaces-1
         // 小数点以下の桁数を表示するビュー
         dataNumDecimalPlaces.text = appConf.numDecimalPlaces.toString()
+
+        // スクリーンONスイッチを設定する
+        switchScreenOn.isChecked = appConf.screenOn
 
         // 音声入力に使う言語スピン
         val locale = appConf.voiceLang

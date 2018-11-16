@@ -4,6 +4,8 @@ package milu.kiriu2010.milucal.gui.func
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.media.Ringtone
+import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -21,6 +23,7 @@ import milu.kiriu2010.milucal.CalApplication
 
 import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
+import milu.kiriu2010.milucal.entity.CalData
 import milu.kiriu2010.milucal.id.RequestID
 import milu.kiriu2010.util.MyTool
 import milu.kiriu2010.voice.Voice2Equation
@@ -39,12 +42,19 @@ class Cal02Fragment : Fragment() {
     private lateinit var dataResult: TextView
     // 音声読み上げ
     private lateinit var tts: TextToSpeech
+    // 音声入力ボタンを押したときの音
+    private lateinit var ringTone: Ringtone
+
     // 計算データを履歴に格納するためのコールバック
     private var historyCallback: OnHistoryCallback? = null
+    // 計算データを履歴から取得するためのコールバック
+    private var historyGetCallback: OnHistoryGetCallback? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_cal02, container, false)
+
+        val ctx = context ?: return view
 
         // アプリ設定を取得
         appConf = (context?.applicationContext as? CalApplication)?.appConf ?: AppConf()
@@ -52,6 +62,10 @@ class Cal02Fragment : Fragment() {
 
         // キーボードを非表示にする
         //activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
+        // 音声入力ボタンを押したときの音
+        val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        ringTone = RingtoneManager.getRingtone(ctx,uri)
 
         // 式を入力するビュー
         dataEQ = view.findViewById(R.id.dataEQ)
@@ -95,6 +109,30 @@ class Cal02Fragment : Fragment() {
         // 右かっこ")"
         val btnRIGHT = view.findViewById<Button>(R.id.btnRIGHT)
         btnRIGHT.setOnClickListener { insertStr(")" ) }
+
+        // 1つ前の履歴(上:↑)
+        val btnCurUp = view.findViewById<Button>(R.id.btnCurUp)
+        btnCurUp.setOnClickListener label@{
+            // 1つ前の履歴を取得
+            val calData = historyGetCallback?.getHistoryPrev() ?: CalData()
+            if (calData.formula.length <= 0) return@label
+
+            // 式、答えをビューに表示
+            dataEQ.setText( calData.formula )
+            dataResult.setText( MyTool.fromBigDeimal2String(calData.num,appConf.numDecimalPlaces) )
+        }
+
+        // 1つ次の履歴(下:↓)
+        val btnCurDown = view.findViewById<Button>(R.id.btnCurDown)
+        btnCurDown.setOnClickListener label@{
+            // 1つ次の履歴を取得
+            val calData = historyGetCallback?.getHistoryNext() ?: CalData()
+            if (calData.formula.length <= 0) return@label
+
+            // 式、答えをビューに表示
+            dataEQ.setText( calData.formula )
+            dataResult.setText( MyTool.fromBigDeimal2String(calData.num,appConf.numDecimalPlaces) )
+        }
 
         // カーソル移動(左:←)
         val btnCurLeft = view.findViewById<Button>(R.id.btnCurLeft)
@@ -228,6 +266,10 @@ class Cal02Fragment : Fragment() {
         val btnVoice = view.findViewById<ImageButton>(R.id.btnVoice)
         btnVoice.setOnClickListener {
             try {
+                // 音を鳴らす
+                if (ringTone.isPlaying) ringTone.stop()
+                ringTone.play()
+
                 // 音声認識の準備
                 val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -375,35 +417,15 @@ class Cal02Fragment : Fragment() {
 
         try {
             val num = ctxCal.execute()
-            /*
-            val numScale = num.scale()
-            val numPrecision = num.precision()
-            Log.d( javaClass.simpleName, "ans[$num]scale[$numScale]precision[$numPrecision]")
-
-            val strNum = when {
-                // 整数部のみ
-                ( numScale <= 0 ) -> { "%d".format(num.toInt()) }
-                // 小数部の桁数が、設定"小数点以下の桁数"より短い場合
-                ( numScale > 0 ) and ( appConf.numDecimalPlaces > numScale ) -> {
-                    var strScale = StringBuffer()
-                    (1..numScale).forEach { strScale.append("#") }
-                    val decimalFmt = DecimalFormat("###." + strScale )
-                    decimalFmt.format(num)
-                }
-                // 小数部の桁数が、設定"小数点以下の桁数"より長い場合
-                else -> {
-                    var strScale = StringBuffer()
-                    (1..appConf.numDecimalPlaces).forEach { strScale.append("#") }
-                    val decimalFmt = DecimalFormat("###." + strScale )
-                    decimalFmt.format(num)
-                }
-            }
-            */
             // 数値(BigDecimal)を文字列に変換
             val strNum = MyTool.fromBigDeimal2String(num,appConf.numDecimalPlaces)
 
             // 計算結果を表示
             dataResult.setText(strNum)
+
+            // 計算データを履歴に格納
+            val calData = CalData(dataEQ.text.toString(),num)
+            historyCallback?.put(calData)
         }
         catch ( calEx: CalException ) {
             calEx.printStackTrace()
@@ -492,6 +514,12 @@ class Cal02Fragment : Fragment() {
         }
         else {
             throw RuntimeException("context must implement OnHistoryCallback")
+        }
+        if ( context is OnHistoryGetCallback) {
+            historyGetCallback = context
+        }
+        else {
+            throw RuntimeException("context must implement OnHistoryGetCallback")
         }
     }
 
