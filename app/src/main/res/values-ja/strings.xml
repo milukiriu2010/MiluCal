@@ -23,4 +23,6 @@
     <string name="label_number_of_decimal_places">小数点以下の桁数</string>
     <string name="label_calculation_history">計算履歴</string>
     <string name="label_screen_on">スクリーンを常にON</string>
+    <string name="menu_calculator">計算機</string>
+    <string name="menu_exchange_rate">為替レート</string>
 </resources>
