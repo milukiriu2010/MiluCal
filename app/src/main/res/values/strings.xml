@@ -31,4 +31,5 @@
     <string name="label_screen_on">Keep screen on</string>
     <string name="menu_calculator">Calculator</string>
     <string name="menu_exchange_rate">Exchange Rate</string>
+    <string name="action_retry">Retry</string>
 </resources>

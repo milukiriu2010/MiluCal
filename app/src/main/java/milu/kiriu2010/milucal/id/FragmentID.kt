@@ -10,5 +10,7 @@ enum class FragmentID(val id: String) {
     // "設定"を表示するフラグメント
     ID_SETTINGS("fragmentSettings"),
     // "About"を表示するフラグメント
-    ID_ABOUT("fragmentAbout")
+    ID_ABOUT("fragmentAbout"),
+    // エラー画面
+    ID_EXCEPTION("fragmentException")
 }
