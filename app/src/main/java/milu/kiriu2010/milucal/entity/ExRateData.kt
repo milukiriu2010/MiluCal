@@ -1,16 +1,9 @@
 package milu.kiriu2010.milucal.entity
 
-// 為替レートのデータ
-data class ExRateData(
-    // 日付
-    // 2018-11-30
-    val date: String,
-    // レート
-    val rate: MutableMap<String,Float>,
-    // 基準となる通貨
-    val base: String
-)
+import android.os.Parcel
+import android.os.Parcelable
 
+// 為替レートのデータ
 /*
 {
   "date": "2018-11-30",
@@ -51,3 +44,13 @@ data class ExRateData(
   "base": "EUR"
 }
  */
+data class ExRateData(
+    // 日付
+    // 2018-11-30
+    val date: String,
+    // レート
+    val rateMap: MutableMap<String,Float>,
+    // 基準となる通貨
+    val base: String
+)
+

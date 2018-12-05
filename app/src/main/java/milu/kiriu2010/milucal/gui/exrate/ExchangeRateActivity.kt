@@ -74,6 +74,11 @@ class ExchangeRateActivity : DrawerActivity()
         if (data.dataOK != null) {
             val exRateData = data.dataOK
             Log.d(javaClass.simpleName, "date:{${exRateData?.date}}")
+            if (supportFragmentManager.findFragmentByTag(FragmentID.ID_EXCHANGE_RATE.id) == null) {
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.frameMenuDrawer, ExchangeRateFragment.newInstance(exRateData!!), FragmentID.ID_EXCHANGE_RATE.id)
+                    .commit()
+            }
         }
         // --------------------------------------
         // 通信エラー
