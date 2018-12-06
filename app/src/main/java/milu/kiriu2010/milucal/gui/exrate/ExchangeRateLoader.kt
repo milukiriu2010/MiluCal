@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.content.AsyncTaskLoader
 import milu.kiriu2010.loader.v2.AsyncResultOK
 import milu.kiriu2010.milucal.CalApplication
-import milu.kiriu2010.milucal.entity.ExRateData
+import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.net.v2.MyURLConAbs
 import milu.kiriu2010.net.v2.MyURLConFactory
 import org.json.JSONObject
@@ -16,16 +16,16 @@ import java.net.URL
 class ExchangeRateLoader(
     context: Context,
     val appl: CalApplication)
-    : AsyncTaskLoader<AsyncResultOK<ExRateData>>(context) {
+    : AsyncTaskLoader<AsyncResultOK<ExRateJson>>(context) {
 
     // ------------------------------------------
     // 為替レートの結果をキャッシュ
     // ------------------------------------------
-    private var cache: AsyncResultOK<ExRateData>? = null
+    private var cache: AsyncResultOK<ExRateJson>? = null
 
-    override fun loadInBackground(): AsyncResultOK<ExRateData>? {
+    override fun loadInBackground(): AsyncResultOK<ExRateJson>? {
         // Loader呼び出し元が受け取るデータ
-        val asyncResultOK = AsyncResultOK<ExRateData>()
+        val asyncResultOK = AsyncResultOK<ExRateJson>()
 
         // アクセス先URL
         val url = URL(appl.appConf.urlExchangeRate)
@@ -89,7 +89,7 @@ class ExchangeRateLoader(
                     rates["CHF"] = ratesObj.getString("CHF").toFloat()
                     rates["INR"] = ratesObj.getString("INR").toFloat()
 
-                    val exRateData = ExRateData(date,rates,base)
+                    val exRateData = ExRateJson(date,rates,base)
 
                     asyncResultOK.dataOK = exRateData
                 }
@@ -106,7 +106,7 @@ class ExchangeRateLoader(
     // ----------------------------------------------
     // コールバッククラスに返す前に通る処理
     // ----------------------------------------------
-    override fun deliverResult(data: AsyncResultOK<ExRateData>?) {
+    override fun deliverResult(data: AsyncResultOK<ExRateJson>?) {
         // 破棄されていたら結果を返さない
         if (isReset || data == null) return
 

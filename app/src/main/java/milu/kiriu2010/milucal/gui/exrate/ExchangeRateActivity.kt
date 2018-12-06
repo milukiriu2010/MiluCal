@@ -1,6 +1,5 @@
 package milu.kiriu2010.milucal.gui.exrate
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
@@ -11,13 +10,13 @@ import milu.kiriu2010.gui.exp.OnRetryListener
 import milu.kiriu2010.loader.v2.AsyncResultOK
 import milu.kiriu2010.milucal.CalApplication
 import milu.kiriu2010.milucal.R
-import milu.kiriu2010.milucal.entity.ExRateData
+import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.gui.menu.CalDrawerMenuFragment
 import milu.kiriu2010.milucal.id.FragmentID
 import milu.kiriu2010.milucal.id.LoaderID
 
 class ExchangeRateActivity : DrawerActivity()
-    , LoaderManager.LoaderCallbacks<AsyncResultOK<ExRateData>>
+    , LoaderManager.LoaderCallbacks<AsyncResultOK<ExRateJson>>
     , OnRetryListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +47,7 @@ class ExchangeRateActivity : DrawerActivity()
     // 非同期処理を行うLoaderを生成する
     // getLoaderManager().initLoaderで一回のみ呼び出される
     // ----------------------------------------------------
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResultOK<ExRateData>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResultOK<ExRateJson>> {
         return when (id) {
             LoaderID.ID_EXCHANGE_RATE.id -> {
                 // 為替レート取得
@@ -62,7 +61,7 @@ class ExchangeRateActivity : DrawerActivity()
     // ---------------------------------------------------
     // 非同期処理終了
     // ---------------------------------------------------
-    override fun onLoadFinished(loader: Loader<AsyncResultOK<ExRateData>>, data: AsyncResultOK<ExRateData>?) {
+    override fun onLoadFinished(loader: Loader<AsyncResultOK<ExRateJson>>, data: AsyncResultOK<ExRateJson>?) {
         if (data == null) return
         if (loader.id != LoaderID.ID_EXCHANGE_RATE.id) return
 
@@ -76,7 +75,7 @@ class ExchangeRateActivity : DrawerActivity()
             Log.d(javaClass.simpleName, "date:{${exRateData?.date}}")
             if (supportFragmentManager.findFragmentByTag(FragmentID.ID_EXCHANGE_RATE.id) == null) {
                 supportFragmentManager.beginTransaction()
-                    .add(R.id.frameMenuDrawer, ExchangeRateFragment.newInstance(exRateData!!), FragmentID.ID_EXCHANGE_RATE.id)
+                    .add(R.id.frameExchangeRate, ExchangeRateFragment.newInstance(exRateData!!), FragmentID.ID_EXCHANGE_RATE.id)
                     .commit()
             }
         }
@@ -90,7 +89,7 @@ class ExchangeRateActivity : DrawerActivity()
 
     // LoaderManager.LoaderCallbacks
     // ローダがリセットされたときに呼ばれる
-    override fun onLoaderReset(loader: Loader<AsyncResultOK<ExRateData>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResultOK<ExRateJson>>) {
     }
 
     // OnRetryListener
