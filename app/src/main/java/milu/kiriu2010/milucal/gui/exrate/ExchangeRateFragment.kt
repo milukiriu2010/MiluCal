@@ -10,26 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 
 import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.entity.ExRateRecord
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-/*
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-*/
-//private const val ID_EXCHANGE_RATE = "idExchangeRate"
-
-
 class ExchangeRateFragment : Fragment() {
-    /*
-    private var param1: String? = null
-    private var param2: String? = null
-    */
-
     // 為替データ(Json)
     private var exRateJson: ExRateJson? = null
 
@@ -39,20 +27,26 @@ class ExchangeRateFragment : Fragment() {
     // 為替データのリサイクラービューのアダプタ
     private lateinit var adapter: ExchangeRateAdapter
 
+    // 基準通貨シンボル
+    private lateinit var dataCurrencyBaseSymbol: TextView
+
+    // 基準通貨レート
+    private lateinit var dataCurrencyBaseRate: EditText
+
+    // 基準通貨名
+    private lateinit var dataCurrencyBaseDesc: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            /*
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-            */
-            //exRateJson = it.getParcelable<ExRateJson>(ID_EXCHANGE_RATE)
+            // 為替レートが計算された日付
             val date = it.getString("date") ?: ""
+            // 為替レートの基準通貨
             val base = it.getString("base") ?: ""
+            // 為替レートの比較通貨
             val rateMap: MutableMap<String,Float> = mutableMapOf()
             currencyLst.forEach { key ->
                 val currency =  key.substringAfterLast("rateMap")
-                //Log.d(javaClass.simpleName,"key[$key]cur[$currency]val[${it.getFloat(key)}]")
                 rateMap[currency] = it.getFloat(key)
             }
             // 為替データ(Json)
@@ -67,25 +61,32 @@ class ExchangeRateFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_exchange_rate, container, false)
 
-        /*
-        Log.d(javaClass.simpleName,"date[${exRateJson?.date}]base[${exRateJson?.base}]")
-        exRateJson?.rateMap?.keys?.forEach { key ->
-            Log.d(javaClass.simpleName,"currency[$key]rate[${exRateJson?.rateMap?.get(key)}]")
-        }
-        */
-
+        // 基準通貨のシンボル
+        val baseSymbol = exRateJson?.base ?: ""
         // 為替レート(基準貨幣)
-        val exRateRecordA = ExRateRecord(exRateJson?.base ?: "","",1f)
+        val exRateRecordA = ExRateRecord(baseSymbol,getDescFromSymbol(baseSymbol),1f)
 
         // 為替レート(比較貨幣)のリスト
         val exRateRecordBLst = mutableListOf<ExRateRecord>()
         exRateJson?.rateMap?.keys?.sorted()?.forEach { key ->
             // 為替レート(比較貨幣)
-            val exRateRecordB = ExRateRecord(key, "", exRateJson?.rateMap?.get(key) ?: 0f )
+            val exRateRecordB = ExRateRecord(key, getDescFromSymbol(key), exRateJson?.rateMap?.get(key) ?: 0f )
             exRateRecordBLst.add(exRateRecordB)
         }
 
         val ctx = context ?: return view
+
+        // 基準通貨シンボル
+        dataCurrencyBaseSymbol = view.findViewById(R.id.dataCurrencyBaseSymbol)
+        dataCurrencyBaseSymbol.text = exRateRecordA.symbol
+
+        // 基準通貨レート
+        dataCurrencyBaseRate = view.findViewById(R.id.dataCurrencyBaseRate)
+        dataCurrencyBaseRate.setText(exRateRecordA.rate.toString())
+
+        // 基準通貨名
+        dataCurrencyBaseDesc = view.findViewById(R.id.dataCurrencyBaseDesc)
+        dataCurrencyBaseDesc.text = exRateRecordA.desc
 
         // 為替データのリサイクラービュー
         recyclerViewExchangeRate = view.findViewById(R.id.recycleViewExchangeRate)
@@ -105,6 +106,15 @@ class ExchangeRateFragment : Fragment() {
         return view
     }
 
+    // 通貨シンボルから通貨名を取得する
+    private fun getDescFromSymbol(symbol: String): String {
+        // 通貨名のリソースIDを生成
+        val resourceId = resources.getIdentifier("currency_${symbol}", "string", activity?.packageName)
+        // リソースから通貨名を取得
+        val desc = resources.getString(resourceId) ?: "Unregistered Currency"
+        //Log.d(javaClass.simpleName, "desc[$desc]")
+        return desc
+    }
 
     companion object {
         private val currencyLst: MutableList<String> = mutableListOf()
@@ -113,12 +123,6 @@ class ExchangeRateFragment : Fragment() {
         fun newInstance(exRateJson: ExRateJson) =
             ExchangeRateFragment().apply {
                 arguments = Bundle().apply {
-                    /*
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                    */
-                    //putParcelable(ID_EXCHANGE_RATE,exRateJson)
-
                     putString("date",exRateJson.date)
                     putString("base",exRateJson.base)
                     exRateJson.rateMap.keys.forEach { key ->

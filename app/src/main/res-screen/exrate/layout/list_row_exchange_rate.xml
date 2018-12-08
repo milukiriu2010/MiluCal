@@ -8,37 +8,34 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/dataCurrencyA" android:layout_marginTop="8dp"
+            android:id="@+id/dataCurrencyCompSymbol" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" tools:text="EUR" android:textSize="24sp"
-            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/dataRateA"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" tools:text="USD" android:textSize="18sp"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/dataCurrencyCompRate"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
     <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp" android:id="@+id/dataRateA"
-            app:layout_constraintStart_toEndOf="@+id/dataCurrencyA" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" tools:text="1.0" android:textSize="24sp" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline" android:layout_marginRight="8dp"
-            app:layout_constraintHorizontal_bias="0.5"/>
-    <android.support.constraint.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                          android:id="@+id/guideline"
-                                          android:orientation="vertical"
-                                          app:layout_constraintGuide_percent="0.5"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/dataCurrencyCompRate"
+            app:layout_constraintStart_toEndOf="@+id/dataCurrencyCompSymbol" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp" tools:text="1.0" android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="@+id/dataCurrencyCompSymbol"
+            app:layout_constraintBottom_toBottomOf="@+id/dataCurrencyCompSymbol"/>
     <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp" android:id="@+id/dataCurrencyB"
-            app:layout_constraintStart_toStartOf="@+id/guideline" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" tools:text="USD" android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/guideline" app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/dataRateB"/>
-    <TextView
+            android:layout_height="wrap_content"
+            android:id="@+id/dataCurrencyCompDesc"
+            app:layout_constraintStart_toEndOf="@+id/dataCurrencyCompRate" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/dataCurrencyCompRate"
+            app:layout_constraintBottom_toBottomOf="@+id/dataCurrencyCompRate"
+            tools:text="United States Dollar" android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewMore" android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" app:layout_constraintHorizontal_bias="1.0"/>
+    <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp" android:id="@+id/dataRateB"
-            app:layout_constraintStart_toEndOf="@+id/dataCurrencyB" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="6dp"
-            android:layout_marginRight="6dp" tools:text="1.0" android:textSize="24sp"
-            app:layout_constraintHorizontal_bias="0.5"/>
+            android:layout_height="wrap_content" app:srcCompat="@drawable/svg_more"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/imageViewMore"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
 </android.support.constraint.ConstraintLayout>
