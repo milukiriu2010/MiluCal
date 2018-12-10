@@ -66,4 +66,5 @@
     <string name="currency_CHF">Swiss Franc</string>
     <string name="currency_INR">Indian Rupee</string>
     <string name="action_to_base">base currency</string>
+    <string name="msg_progress">collecting data</string>
 </resources>

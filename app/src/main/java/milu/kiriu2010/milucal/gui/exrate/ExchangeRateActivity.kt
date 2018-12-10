@@ -5,8 +5,10 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.util.Log
+import milu.kiriu2010.gui.common.ExceptionFragment
 import milu.kiriu2010.gui.drawer.DrawerActivity
 import milu.kiriu2010.gui.exp.OnRetryListener
+import milu.kiriu2010.gui.progress.ProgressFragment
 import milu.kiriu2010.loader.v2.AsyncResultOK
 import milu.kiriu2010.milucal.CalApplication
 import milu.kiriu2010.milucal.R
@@ -50,7 +52,13 @@ class ExchangeRateActivity : DrawerActivity()
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResultOK<ExRateJson>> {
         return when (id) {
             LoaderID.ID_EXCHANGE_RATE.id -> {
-                // 為替レート取得
+                // 進捗状況を表示するフラグメントを追加
+                if (supportFragmentManager.findFragmentByTag(FragmentID.ID_PROGRESS.id) == null) {
+                    supportFragmentManager.beginTransaction()
+                        .add(R.id.frameExchangeRate, ProgressFragment.newInstance(), FragmentID.ID_PROGRESS.id)
+                        .commit()
+                }
+                // 為替レートを取得するローダを起動
                 ExchangeRateLoader(this, application as CalApplication)
             }
             else -> throw RuntimeException("no supported loader for this id[$id]")
@@ -65,6 +73,14 @@ class ExchangeRateActivity : DrawerActivity()
         if (data == null) return
         if (loader.id != LoaderID.ID_EXCHANGE_RATE.id) return
 
+        // 進捗状況を表示するフラグメントを削除
+        val fragmentProgress = supportFragmentManager.findFragmentByTag(FragmentID.ID_PROGRESS.id)
+        if ( fragmentProgress != null ) {
+            supportFragmentManager.beginTransaction()
+                .remove(fragmentProgress)
+                .commit()
+        }
+
         // --------------------------------------
         // 為替レートの結果を表示
         // --------------------------------------
@@ -73,6 +89,7 @@ class ExchangeRateActivity : DrawerActivity()
         if (data.dataOK != null) {
             val exRateData = data.dataOK
             Log.d(javaClass.simpleName, "date:{${exRateData?.date}}")
+            // 為替レートの結果を表示するフラグメントを追加
             if (supportFragmentManager.findFragmentByTag(FragmentID.ID_EXCHANGE_RATE.id) == null) {
                 supportFragmentManager.beginTransaction()
                     .add(R.id.frameExchangeRate, ExchangeRateFragment.newInstance(exRateData!!), FragmentID.ID_EXCHANGE_RATE.id)
@@ -83,7 +100,12 @@ class ExchangeRateActivity : DrawerActivity()
         // 通信エラー
         // --------------------------------------
         else {
-
+            // エラーを表示するフラグメントを追加
+            if (supportFragmentManager.findFragmentByTag(FragmentID.ID_EXCEPTION.id) == null) {
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.frameExchangeRate, ExceptionFragment.newInstance("Network Error",data.exception!!), FragmentID.ID_EXCEPTION.id)
+                    .commit()
+            }
         }
     }
 
