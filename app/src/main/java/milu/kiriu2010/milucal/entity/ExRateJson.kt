@@ -60,5 +60,5 @@ data class ExRateRecord(
     // 貨幣名
     val desc: String,
     // 金額
-    val rate: Float
+    var rate: Float
 )

@@ -1,7 +1,9 @@
 package milu.kiriu2010.milucal.gui.exrate
 
 
+import android.content.Context
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -10,6 +12,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 
@@ -17,9 +21,20 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.entity.ExRateRecord
 
-class ExchangeRateFragment : Fragment() {
+class ExchangeRateFragment : Fragment()
+    , ExchangeRateCallback {
+
     // 為替データ(Json)
     private var exRateJson: ExRateJson? = null
+
+    // 為替レート(基準通貨)
+    private lateinit var exRateRecordA: ExRateRecord
+
+    // 為替レート(比較通貨)のリスト
+    val exRateRecordBLst = mutableListOf<ExRateRecord>()
+
+    // このフラグメントのレイアウト
+    private lateinit var layoutExchangeRate: ConstraintLayout
 
     // 為替データのリサイクラービュー
     private lateinit var recyclerViewExchangeRate: RecyclerView
@@ -35,6 +50,12 @@ class ExchangeRateFragment : Fragment() {
 
     // 基準通貨名
     private lateinit var dataCurrencyBaseDesc: TextView
+
+    // 為替データの取得日
+    private lateinit var dataDate: TextView
+
+    // 為替データ更新ボタン
+    private lateinit var btnUpdate: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,11 +84,11 @@ class ExchangeRateFragment : Fragment() {
 
         // 基準通貨のシンボル
         val baseSymbol = exRateJson?.base ?: ""
-        // 為替レート(基準貨幣)
-        val exRateRecordA = ExRateRecord(baseSymbol,getDescFromSymbol(baseSymbol),1f)
+        // 為替レート(基準通貨)
+        exRateRecordA = ExRateRecord(baseSymbol,getDescFromSymbol(baseSymbol),1f)
 
-        // 為替レート(比較貨幣)のリスト
-        val exRateRecordBLst = mutableListOf<ExRateRecord>()
+        // 為替レート(比較通貨)のリスト
+        exRateRecordBLst.clear()
         exRateJson?.rateMap?.keys?.sorted()?.forEach { key ->
             // 為替レート(比較貨幣)
             val exRateRecordB = ExRateRecord(key, getDescFromSymbol(key), exRateJson?.rateMap?.get(key) ?: 0f )
@@ -75,6 +96,9 @@ class ExchangeRateFragment : Fragment() {
         }
 
         val ctx = context ?: return view
+
+        // このフラグメントのレイアウト
+        layoutExchangeRate = view.findViewById(R.id.layoutExchangeRate)
 
         // 基準通貨シンボル
         dataCurrencyBaseSymbol = view.findViewById(R.id.dataCurrencyBaseSymbol)
@@ -88,6 +112,10 @@ class ExchangeRateFragment : Fragment() {
         dataCurrencyBaseDesc = view.findViewById(R.id.dataCurrencyBaseDesc)
         dataCurrencyBaseDesc.text = exRateRecordA.desc
 
+        // 為替データの取得日
+        dataDate = view.findViewById(R.id.dataDate)
+        dataDate.text = exRateJson?.date ?: ""
+
         // 為替データのリサイクラービュー
         recyclerViewExchangeRate = view.findViewById(R.id.recycleViewExchangeRate)
 
@@ -96,12 +124,19 @@ class ExchangeRateFragment : Fragment() {
         recyclerViewExchangeRate.layoutManager = layoutManager
 
         // 為替データのリサイクラービューのアダプタ
-        adapter = ExchangeRateAdapter(ctx,exRateRecordA,exRateRecordBLst)
+        adapter = ExchangeRateAdapter(ctx,this,exRateRecordBLst)
         recyclerViewExchangeRate.adapter = adapter
 
         // 為替データのリサイクラービューの区切り線
         val itemDecoration = DividerItemDecoration(ctx,DividerItemDecoration.VERTICAL)
         recyclerViewExchangeRate.addItemDecoration(itemDecoration)
+
+        // 為替データ更新ボタン
+        btnUpdate = view.findViewById(R.id.btnUpdate)
+        btnUpdate.setOnClickListener {
+            // 基準通貨のレートを更新
+            changeBaseCurrencyRate()
+        }
 
         return view
     }
@@ -114,6 +149,84 @@ class ExchangeRateFragment : Fragment() {
         val desc = resources.getString(resourceId) ?: "Unregistered Currency"
         //Log.d(javaClass.simpleName, "desc[$desc]")
         return desc
+    }
+
+    // 基準通貨のレートを更新
+    private fun changeBaseCurrencyRate() {
+        // 基準通貨のレートをエディットテキストから取得
+        val baseRate = dataCurrencyBaseRate.text.toString().toFloatOrNull()
+        // 入力値が数値フォーマットでない場合エラーを表示
+        if ( baseRate == null ) {
+            dataCurrencyBaseRate.error = resources.getString(R.string.errmsg_fmt_number)
+            return
+        }
+        // 入力値が0未満の場合エラーを表示
+        if ( baseRate <= 0f ) {
+            dataCurrencyBaseRate.error = resources.getString(R.string.errmsg_fmt_number)
+            return
+        }
+
+        // キーボードを閉じる
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(layoutExchangeRate.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+
+        // 基準通貨のレート"現在値"と"入力値"の倍率
+        val mag = baseRate/exRateRecordA.rate
+
+        // 基準通貨のレートを入力値に変更する
+        exRateRecordA.rate = baseRate
+
+        // 比較通貨のレートを変更する
+        exRateRecordBLst.forEach { exRateRecordB ->
+            exRateRecordB.rate = exRateRecordB.rate * mag
+        }
+
+        // リサイクラービューの表示を更新
+        adapter.notifyDataSetChanged()
+    }
+
+    // 基準通貨を変更する
+    override fun changeBaseCurrency(nextBaseExRateRecord: ExRateRecord) {
+        // 基準通貨(変更前)をコピー
+        val prevBaseExRateRecord = exRateRecordA.copy()
+        // 基準通貨(変更前)のレートを"基準通貨(変更後)のレート=1.0"で補正する
+        prevBaseExRateRecord.rate = prevBaseExRateRecord.rate/nextBaseExRateRecord.rate
+
+        // 為替レート(比較通貨)の一覧から、"基準通貨(変更後)"を削除
+        exRateRecordBLst.remove(nextBaseExRateRecord)
+
+        // 為替レート(比較通貨)のレートを"基準通貨(変更後)のレート=1.0"で補正する
+        exRateRecordBLst.forEach { exRateRecordB ->
+            exRateRecordB.rate = exRateRecordB.rate * prevBaseExRateRecord.rate
+        }
+
+        // 為替レート(比較通貨)の一覧に"基準通貨(変更前)"を先頭に追加
+        exRateRecordBLst.add(0,prevBaseExRateRecord)
+
+        // 基準通貨(変更後)のレート=1.0に更新
+        nextBaseExRateRecord.rate = 1f
+
+        // 基準通貨を入れ替える
+        exRateRecordA = nextBaseExRateRecord
+
+        // 為替レート(比較通貨)のレートをシンボルでソート
+        //exRateRecordBLst.sortBy { it.symbol }
+
+        // -----------------------------------------------------------
+        // 以下、表示を変更
+        // -----------------------------------------------------------
+
+        // 基準通貨シンボル
+        dataCurrencyBaseSymbol.text = exRateRecordA.symbol
+
+        // 基準通貨レート
+        dataCurrencyBaseRate.setText(exRateRecordA.rate.toString())
+
+        // 基準通貨名
+        dataCurrencyBaseDesc.text = exRateRecordA.desc
+
+        // リサイクラービューの表示を更新
+        adapter.notifyDataSetChanged()
     }
 
     companion object {

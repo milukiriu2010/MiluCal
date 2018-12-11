@@ -15,8 +15,8 @@ import milu.kiriu2010.milucal.entity.ExRateRecord
 
 class ExchangeRateAdapter(
     val context: Context,
-    // 為替レート(基準貨幣)
-    val exRateRecordA: ExRateRecord,
+    // アクションのコールバック
+    val exRateCallback: ExchangeRateCallback,
     // 為替レート(比較貨幣)リスト
     val exRateRecordBLst: MutableList<ExRateRecord> = mutableListOf() )
     : RecyclerView.Adapter<ExchangeRateAdapter.ExchangeRateViewHolder>(){
@@ -58,7 +58,10 @@ class ExchangeRateAdapter(
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menuItemToBase -> {
-                        Toast.makeText(context,"test",Toast.LENGTH_LONG).show()
+
+                        //Toast.makeText(context,"test",Toast.LENGTH_LONG).show()
+                        // 基準通貨をクリックした通貨に変更する
+                        exRateCallback.changeBaseCurrency(exRateRecordB)
                         true
                     }
                     else -> {

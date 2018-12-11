@@ -119,6 +119,6 @@ class ExchangeRateActivity : DrawerActivity()
         Log.d(javaClass.simpleName, "onRetry[$id]")
 
         // "為替レートを取得するロード"の再初期化と開始
-        //val restartLoader = LoaderManager.getInstance<FragmentActivity>(this).restartLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
+        LoaderManager.getInstance<FragmentActivity>(this).restartLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
     }
 }
