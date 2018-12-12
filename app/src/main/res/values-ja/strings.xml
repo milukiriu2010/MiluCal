@@ -25,4 +25,13 @@
     <string name="label_screen_on">スクリーンを常にON</string>
     <string name="menu_calculator">計算機</string>
     <string name="menu_exchange_rate">為替レート</string>
+    <string name="action_retry">リトライ</string>
+    <string name="currency_EUR">ユーロ</string>
+    <string name="currency_BGN">ブルガリア レフ</string>
+    <string name="currency_CAD">カナダ ドル</string>
+    <string name="currency_BRL">ブラジル レアル</string>
+    <string name="currency_HUF">ハンガリー フォリント</string>
+    <string name="currency_DKK">デンマーク クローネ</string>
+    <string name="currency_JPY">日本 円</string>
+    <string name="currency_ILS">イスラエル 新シェケル</string>
 </resources>

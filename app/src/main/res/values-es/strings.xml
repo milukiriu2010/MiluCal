@@ -23,4 +23,15 @@
     <string name="label_number_of_decimal_places">Número de decimales</string>
     <string name="label_calculation_history">registro de cálculo</string>
     <string name="label_screen_on">Mantener la pantalla en</string>
+    <string name="menu_calculator">Calculadora</string>
+    <string name="menu_exchange_rate">Tipo de cambio</string>
+    <string name="action_retry">Procesar de nuevo</string>
+    <string name="currency_EUR">Euro</string>
+    <string name="currency_BGN">Lev Búlgaro</string>
+    <string name="currency_CAD">Dolar Canadiense</string>
+    <string name="currency_BRL">Real Brasileño</string>
+    <string name="currency_HUF">Florín Húngaro</string>
+    <string name="currency_DKK">Corona Danesa</string>
+    <string name="currency_JPY">Yen Japonés</string>
+    <string name="currency_ILS">Nueva Sheqel Israelí</string>
 </resources>

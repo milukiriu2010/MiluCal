@@ -23,4 +23,15 @@
     <string name="label_number_of_decimal_places">小数位数</string>
     <string name="label_calculation_history">计算记录</string>
     <string name="label_screen_on">保持屏幕</string>
+    <string name="menu_calculator">计算器</string>
+    <string name="menu_exchange_rate">汇率</string>
+    <string name="action_retry">重试</string>
+    <string name="currency_EUR">欧元</string>
+    <string name="currency_BGN">保加利亚 列弗</string>
+    <string name="currency_CAD">加元</string>
+    <string name="currency_BRL">巴西 雷亚尔</string>
+    <string name="currency_HUF">匈牙利 福林</string>
+    <string name="currency_DKK">丹麦 克朗</string>
+    <string name="currency_JPY">日圆</string>
+    <string name="currency_ILS">以色列 新谢克尔</string>
 </resources>
