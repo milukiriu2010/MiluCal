@@ -190,6 +190,57 @@ class ExchangeRateFragment : Fragment()
         // 基準通貨(変更前)をコピー
         val prevBaseExRateRecord = exRateRecordA.copy()
         // 基準通貨(変更前)のレートを"基準通貨(変更後)のレート=1.0"で補正する
+        val backRate = prevBaseExRateRecord.rate/nextBaseExRateRecord.rate
+        val prevRate = prevBaseExRateRecord.rate
+        prevBaseExRateRecord.rate = backRate
+
+        // 為替レート(比較通貨)の一覧から、"基準通貨(変更後)"を削除
+        exRateRecordBLst.remove(nextBaseExRateRecord)
+
+        // 為替レート(比較通貨)のレートを"基準通貨(変更後)のレート=1.0"で補正する
+        exRateRecordBLst.forEach { exRateRecordB ->
+            exRateRecordB.rate = exRateRecordB.rate * backRate / prevRate
+        }
+
+        // 為替レート(比較通貨)の一覧に"基準通貨(変更前)"を先頭に追加
+        exRateRecordBLst.add(0,prevBaseExRateRecord)
+
+        // 基準通貨(変更後)のレート=1.0に更新
+        nextBaseExRateRecord.rate = 1f
+
+        // 基準通貨を入れ替える
+        exRateRecordA = nextBaseExRateRecord
+
+        // 為替レート(比較通貨)のレートをシンボルでソート
+        //exRateRecordBLst.sortBy { it.symbol }
+
+        // -----------------------------------------------------------
+        // 以下、表示を変更
+        // -----------------------------------------------------------
+
+        // 基準通貨シンボル
+        dataCurrencyBaseSymbol.text = exRateRecordA.symbol
+
+        // 基準通貨レート
+        dataCurrencyBaseRate.setText(exRateRecordA.rate.toString())
+
+        // 基準通貨名
+        dataCurrencyBaseDesc.text = exRateRecordA.desc
+
+        // リサイクラービューの表示を更新
+        adapter.notifyDataSetChanged()
+
+        // リサイクラービューの先頭にスクロール
+        recyclerViewExchangeRate.post {
+            recyclerViewExchangeRate.smoothScrollToPosition(0)
+        }
+    }
+/*
+    // 基準通貨を変更する
+    override fun changeBaseCurrency(nextBaseExRateRecord: ExRateRecord) {
+        // 基準通貨(変更前)をコピー
+        val prevBaseExRateRecord = exRateRecordA.copy()
+        // 基準通貨(変更前)のレートを"基準通貨(変更後)のレート=1.0"で補正する
         prevBaseExRateRecord.rate = prevBaseExRateRecord.rate/nextBaseExRateRecord.rate
 
         // 為替レート(比較通貨)の一覧から、"基準通貨(変更後)"を削除
@@ -228,7 +279,7 @@ class ExchangeRateFragment : Fragment()
         // リサイクラービューの表示を更新
         adapter.notifyDataSetChanged()
     }
-
+*/
     companion object {
         private val currencyLst: MutableList<String> = mutableListOf()
 
