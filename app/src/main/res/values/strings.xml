@@ -65,8 +65,8 @@
     <string name="currency_SGD">Singapore Dollar</string>
     <string name="currency_CHF">Swiss Franc</string>
     <string name="currency_INR">Indian Rupee</string>
-    <string name="action_to_base">base currency</string>
-    <string name="msg_progress">collecting data</string>
+    <string name="action_to_base">To Base Currency</string>
+    <string name="msg_progress">Collecting Data</string>
     <string name="action_update">Update</string>
     <string name="errmsg_fmt_number">Input number</string>
 </resources>
