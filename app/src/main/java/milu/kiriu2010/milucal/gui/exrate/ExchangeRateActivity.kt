@@ -5,6 +5,9 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.WindowManager
 import milu.kiriu2010.gui.common.ExceptionFragment
 import milu.kiriu2010.gui.drawer.DrawerActivity
 import milu.kiriu2010.gui.exp.OnRetryListener
@@ -12,8 +15,11 @@ import milu.kiriu2010.gui.progress.ProgressFragment
 import milu.kiriu2010.loader.v2.AsyncResultOK
 import milu.kiriu2010.milucal.CalApplication
 import milu.kiriu2010.milucal.R
+import milu.kiriu2010.milucal.conf.AppConf
 import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.gui.menu.CalDrawerMenuFragment
+import milu.kiriu2010.milucal.gui.misc.AboutFragment
+import milu.kiriu2010.milucal.gui.misc.ConfFragment
 import milu.kiriu2010.milucal.id.FragmentID
 import milu.kiriu2010.milucal.id.LoaderID
 
@@ -21,12 +27,21 @@ class ExchangeRateActivity : DrawerActivity()
     , LoaderManager.LoaderCallbacks<AsyncResultOK<ExRateJson>>
     , OnRetryListener {
 
+    // アプリ設定
+    private lateinit var appConf: AppConf
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exchange_rate)
 
         // ドロワーレイアウトを表示する
         setupDrawLayout()
+
+        // アプリ設定を取得
+        appConf = (applicationContext as? CalApplication)?.appConf ?: AppConf()
+
+        // スクリーン制御
+        appConf.screenControl(this)
 
         // "為替レートを取得するローダ"の初期化と開始
         LoaderManager.getInstance<FragmentActivity>(this).initLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
@@ -120,5 +135,29 @@ class ExchangeRateActivity : DrawerActivity()
 
         // "為替レートを取得するロード"の再初期化と開始
         LoaderManager.getInstance<FragmentActivity>(this).restartLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_cal, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            // "設定"フラグメントを表示
+            R.id.action_settings -> {
+                val dialog = ConfFragment.newInstance()
+                dialog.show(supportFragmentManager, FragmentID.ID_SETTINGS.id)
+                true
+            }
+            // "About Me"フラグメントを表示
+            R.id.action_about -> {
+                val dialog = AboutFragment.newInstance()
+                dialog.show(supportFragmentManager, FragmentID.ID_ABOUT.id)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

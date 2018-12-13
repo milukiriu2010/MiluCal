@@ -1,5 +1,7 @@
 package milu.kiriu2010.milucal.conf
 
+import android.app.Activity
+import android.view.WindowManager
 import java.util.*
 
 // アプリ設定
@@ -51,5 +53,17 @@ class AppConf {
         screenOn = appConfDef.screenOn
         // 音声入力に使う言語
         voiceLang = appConfDef.voiceLang
+    }
+
+    // スクリーン制御
+    fun screenControl(activity: Activity) {
+        // ON
+        if ( screenOn ) {
+            activity.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+        // OFF
+        else {
+            activity.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 }

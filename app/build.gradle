@@ -11,8 +11,8 @@ android {
         applicationId "milu.kiriu2010.milucal"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2
-        versionName "2018.11.16"
+        versionCode 3
+        versionName "2018.12.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

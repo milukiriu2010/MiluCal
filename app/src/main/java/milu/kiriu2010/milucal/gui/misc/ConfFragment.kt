@@ -148,6 +148,8 @@ class ConfFragment : DialogFragment()
 
             // "スクリーンON"に対応する更新を実施
             appConf.screenOn = switchScreenOn.isChecked
+            appConf.screenControl(activity!!)
+            /*
             // ON
             if ( appConf.screenOn ) {
                 activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -156,6 +158,8 @@ class ConfFragment : DialogFragment()
             else {
                 activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
+            */
+
 
             // 音声入力に使う言語
             appConf.voiceLang = spinVoice.selectedItem as Locale

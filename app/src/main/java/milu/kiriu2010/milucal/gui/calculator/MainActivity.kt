@@ -3,6 +3,7 @@ package milu.kiriu2010.milucal.gui.calculator
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_cal.*
 import milu.kiriu2010.gui.drawer.DrawerActivity
 import milu.kiriu2010.milucal.CalApplication
@@ -39,6 +40,9 @@ class MainActivity : DrawerActivity()
 
         // アプリ設定を取得
         appConf = (applicationContext as? CalApplication)?.appConf ?: AppConf()
+
+        // スクリーン制御
+        appConf.screenControl(this)
 
         // 計算データの履歴
         calDataLst = LimitedArrayList(appConf.historyCnt,appConf.historyCnt)
