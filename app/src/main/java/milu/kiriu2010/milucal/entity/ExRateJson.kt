@@ -3,7 +3,7 @@ package milu.kiriu2010.milucal.entity
 import android.os.Parcel
 import android.os.Parcelable
 
-// 為替レートのデータ
+// 為替レートのJsonデータ
 /*
 {
   "date": "2018-11-30",
@@ -54,11 +54,64 @@ data class ExRateJson(
     val base: String
 )
 
+// 各通貨ごとのデータ
 data class ExRateRecord(
-    // 貨幣シンボル
+    // 通貨シンボル
     val symbol: String,
-    // 貨幣名
+    // 通貨名
     val desc: String,
     // 金額
     var rate: Float
+): Parcelable {
+    constructor(parcel: Parcel) : this(
+        // 通貨シンボル
+        parcel.readString(),
+        // 通貨名
+        parcel.readString(),
+        // 金額
+        parcel.readFloat()
+    ) {
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.let {
+            // 通貨シンボル
+            it.writeString(symbol)
+            // 通貨名
+            it.writeString(desc)
+            // 金額
+            it.writeFloat(rate)
+        }
+    }
+
+    override fun describeContents(): Int = 0
+
+    companion object CREATOR : Parcelable.Creator<ExRateRecord> {
+        override fun createFromParcel(parcel: Parcel): ExRateRecord {
+            return ExRateRecord(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ExRateRecord?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+}
+
+
+// 通貨の比較データ
+data class ExRateRecordComp(
+    // 基準通貨
+    val exRateRecordA: ExRateRecord,
+    // 比較通貨
+    val exRateRecordB: ExRateRecord,
+    // 現在値との比較(比較通貨側からみて)
+    // ---------------------------------------
+    // 基準通貨:ドル
+    // 比較通貨:円
+    // の場合
+    //   > 0: 円安
+    //   = 0: 同じ
+    //   < 0: 円高
+    val comp: Int
 )

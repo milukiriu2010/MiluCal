@@ -1,6 +1,7 @@
 package milu.kiriu2010.milucal.gui.exrate
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
@@ -17,6 +18,7 @@ import milu.kiriu2010.milucal.CalApplication
 import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
 import milu.kiriu2010.milucal.entity.ExRateJson
+import milu.kiriu2010.milucal.entity.ExRateRecord
 import milu.kiriu2010.milucal.gui.menu.CalDrawerMenuFragment
 import milu.kiriu2010.milucal.gui.misc.AboutFragment
 import milu.kiriu2010.milucal.gui.misc.ConfFragment
@@ -25,7 +27,8 @@ import milu.kiriu2010.milucal.id.LoaderID
 
 class ExchangeRateActivity : DrawerActivity()
     , LoaderManager.LoaderCallbacks<AsyncResultOK<ExRateJson>>
-    , OnRetryListener {
+    , OnRetryListener
+    , ExchangeRateSWCallback {
 
     // アプリ設定
     private lateinit var appConf: AppConf
@@ -135,6 +138,30 @@ class ExchangeRateActivity : DrawerActivity()
 
         // "為替レートを取得するロード"の再初期化と開始
         LoaderManager.getInstance<FragmentActivity>(this).restartLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
+    }
+
+    // ExchangeRateSWCallback
+    // 基準通貨と比較通貨の強弱リストを表示する
+    override fun dispBaseComp(exRateRecordA: ExRateRecord, exRateRecordB: ExRateRecord) {
+        // 為替レートの結果を表示するフラグメントを追加
+        if (supportFragmentManager.findFragmentByTag(FragmentID.ID_EXCHANGE_RATE_SW.id) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.frameExchangeRate, ExchangeRateSWFragment.newInstance(exRateRecordA,exRateRecordB), FragmentID.ID_EXCHANGE_RATE_SW.id)
+                .commit()
+        }
+    }
+
+    override fun onBackPressed() {
+        // 為替レートの結果を表示するフラグメントが表示されていれば削除
+        val fragmentExchangeRateSW = supportFragmentManager.findFragmentByTag(FragmentID.ID_EXCHANGE_RATE_SW.id)
+        if (fragmentExchangeRateSW != null) {
+            supportFragmentManager.beginTransaction()
+                .remove(fragmentExchangeRateSW)
+                .commit()
+        }
+        else {
+            super.onBackPressed()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

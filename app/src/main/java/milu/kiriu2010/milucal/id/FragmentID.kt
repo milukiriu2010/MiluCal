@@ -7,6 +7,8 @@ enum class FragmentID(val id: String) {
     ID_CALCULATOR("fragmentCalculator"),
     // 為替レートを表示するフラグメント
     ID_EXCHANGE_RATE("fragmentExchangeRate"),
+    // 基準通貨と比較通貨の強弱リストを表示するフラグメント
+    ID_EXCHANGE_RATE_SW("fragmentExchangeRateSW"),
     // "設定"を表示するフラグメント
     ID_SETTINGS("fragmentSettings"),
     // "About"を表示するフラグメント

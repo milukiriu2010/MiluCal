@@ -18,7 +18,9 @@ class ExchangeRateAdapter(
     // アクションのコールバック
     val exRateCallback: ExchangeRateCallback,
     // 為替レート(比較貨幣)リスト
-    val exRateRecordBLst: MutableList<ExRateRecord> = mutableListOf() )
+    val exRateRecordBLst: MutableList<ExRateRecord> = mutableListOf(),
+    // 為替レート(比較貨幣)クリック時に呼び出されるコールバック
+    private val onItemClicked: (ExRateRecord) -> Unit )
     : RecyclerView.Adapter<ExchangeRateAdapter.ExchangeRateViewHolder>(){
 
     private val inflater = LayoutInflater.from(context)
@@ -26,19 +28,20 @@ class ExchangeRateAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, pos: Int): ExchangeRateViewHolder {
         val view = inflater.inflate(R.layout.list_row_exchange_rate,parent,false)
         val viewHolder = ExchangeRateViewHolder(view)
+
+        // 為替レート(比較貨幣)クリック時に呼び出されるコールバック
+        view.setOnClickListener {
+            val pos = viewHolder.adapterPosition
+            val exRateRecord = exRateRecordBLst[pos]
+            onItemClicked(exRateRecord)
+        }
+
         return viewHolder
     }
 
     override fun getItemCount(): Int = exRateRecordBLst.size
 
     override fun onBindViewHolder(viewHolder: ExchangeRateViewHolder, pos: Int) {
-        /*
-        // 貨幣レコード(基準貨幣)―シンボル
-        viewHolder.dataCurrencyA.text = exRateRecordA.symbol
-        // 貨幣レコード(基準貨幣)―レート
-        viewHolder.dataRateA.text = exRateRecordA.rate.toString()
-        */
-
         // 為替レコード(比較通貨)
         val exRateRecordB = exRateRecordBLst[pos]
         //Log.d(javaClass.simpleName,"symbol[${exRateRecordB.symbol}]desc[${exRateRecordB.desc}]")
