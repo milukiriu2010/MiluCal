@@ -143,10 +143,17 @@ class ExchangeRateActivity : DrawerActivity()
     // ExchangeRateSWCallback
     // 基準通貨と比較通貨の強弱リストを表示する
     override fun dispBaseComp(exRateRecordA: ExRateRecord, exRateRecordB: ExRateRecord) {
+        // 基準通貨のレートを1で補正する
+        val exRateRecordAx = exRateRecordA.copy()
+        exRateRecordAx.rate = exRateRecordAx.rate/exRateRecordA.rate
+        // 比較通貨のレートを"基準通貨のレート=1"にした値で補正する
+        val exRateRecordBx = exRateRecordB.copy()
+        exRateRecordBx.rate = exRateRecordBx.rate/exRateRecordA.rate
+
         // 為替レートの結果を表示するフラグメントを追加
         if (supportFragmentManager.findFragmentByTag(FragmentID.ID_EXCHANGE_RATE_SW.id) == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.frameExchangeRate, ExchangeRateSWFragment.newInstance(exRateRecordA,exRateRecordB), FragmentID.ID_EXCHANGE_RATE_SW.id)
+                .add(R.id.frameExchangeRate, ExchangeRateSWFragment.newInstance(exRateRecordAx,exRateRecordBx), FragmentID.ID_EXCHANGE_RATE_SW.id)
                 .commit()
         }
     }

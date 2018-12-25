@@ -1,6 +1,8 @@
 package milu.kiriu2010.milucal.gui.exrate
 
 import android.content.Context
+import android.graphics.Color
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +21,7 @@ class ExchangeRateSWAdapter(
     private val inflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, pos: Int): ExchangeRateSWViewHolder {
-        val view = inflater.inflate(R.layout.list_row_exchange_rate,parent,false)
+        val view = inflater.inflate(R.layout.list_row_exchange_rate_sw,parent,false)
         val viewHolder = ExchangeRateSWViewHolder(view)
         return viewHolder
     }
@@ -30,6 +32,33 @@ class ExchangeRateSWAdapter(
         // 通貨の比較データ
         val exRateRecordComp = exRateRecordCompLst[pos]
 
+        // バックグラウンドの色
+        val colorBG = when {
+            (exRateRecordComp.comp >= 10) -> Color.parseColor("#ff0000")
+            (exRateRecordComp.comp == 9) -> Color.parseColor("#ff1a1a")
+            (exRateRecordComp.comp == 8) -> Color.parseColor("#ff3333")
+            (exRateRecordComp.comp == 7) -> Color.parseColor("#ff4d4d")
+            (exRateRecordComp.comp == 6) -> Color.parseColor("#ff6666")
+            (exRateRecordComp.comp == 5) -> Color.parseColor("#ff8080")
+            (exRateRecordComp.comp == 4) -> Color.parseColor("#ff9999")
+            (exRateRecordComp.comp == 3) -> Color.parseColor("#ffb3b3")
+            (exRateRecordComp.comp == 2) -> Color.parseColor("#ffcccc")
+            (exRateRecordComp.comp == 1) -> Color.parseColor("#ffe6e6")
+            (exRateRecordComp.comp == -1) -> Color.parseColor("#e6e6ff")
+            (exRateRecordComp.comp == -2) -> Color.parseColor("#ccccff")
+            (exRateRecordComp.comp == -3) -> Color.parseColor("#b3b3ff")
+            (exRateRecordComp.comp == -4) -> Color.parseColor("#9999ff")
+            (exRateRecordComp.comp == -5) -> Color.parseColor("#8080ff")
+            (exRateRecordComp.comp == -6) -> Color.parseColor("#6666ff")
+            (exRateRecordComp.comp == -7) -> Color.parseColor("#4d4dff")
+            (exRateRecordComp.comp == -8) -> Color.parseColor("#3333ff")
+            (exRateRecordComp.comp == -9) -> Color.parseColor("#1a1aff")
+            (exRateRecordComp.comp <= -10) -> Color.parseColor("#0000ff")
+            else -> Color.parseColor("#ffffff")
+        }
+
+        // レイアウト
+        viewHolder.layoutExRateComp.setBackgroundColor(colorBG)
         // 基準通貨レート
         viewHolder.dataRateA.text = exRateRecordComp.exRateRecordA.rate.toString()
         // 比較通貨レート
@@ -41,6 +70,8 @@ class ExchangeRateSWAdapter(
     }
 
     class ExchangeRateSWViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        // レイアウト
+        val layoutExRateComp = view.findViewById<ConstraintLayout>(R.id.layoutExRateComp)
         // 基準通貨レート
         val dataRateA = view.findViewById<TextView>(R.id.dataRateA)
         // 比較通貨レート
