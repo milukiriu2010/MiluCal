@@ -3,7 +3,7 @@ package milu.kiriu2010.gui.progress
 import android.animation.Animator
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,7 +27,7 @@ class Progress004MoveLinear: ProgressAbstract() {
         imageView.setImageResource(R.drawable.ic_launcher)
 
         // 進捗状況を表示するテキストビュー
-        val textViewProgress = view.findViewById<TextView>(R.id.textViewProgress)
+        //val textViewProgress = view.findViewById<TextView>(R.id.textViewProgress)
 
         // レイアウト・画像サイズ取得
         // エミュレータ(1080x1584) => ButtonNavigationなし

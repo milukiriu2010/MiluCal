@@ -1,7 +1,7 @@
 package milu.kiriu2010.milucal.gui.calculator
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ class CalHistoryAdapter(
     context: Context,
     // 計算データの履歴
     val calDataLst: MutableList<CalData> = mutableListOf() )
-    : RecyclerView.Adapter<CalHistoryAdapter.CalHistoryViewHolder>(){
+    : androidx.recyclerview.widget.RecyclerView.Adapter<CalHistoryAdapter.CalHistoryViewHolder>(){
 
     private val inflater = LayoutInflater.from(context)
 
@@ -40,7 +40,7 @@ class CalHistoryAdapter(
         viewHolder.dataNum.text = MyTool.fromBigDeimal2String(calData.num,appConf.numDecimalPlaces)
     }
 
-    class CalHistoryViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class CalHistoryViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // 計算式
         val dataFormula = view.findViewById<TextView>(R.id.dataFormula)
         // 計算結果

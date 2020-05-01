@@ -2,7 +2,7 @@ package milu.kiriu2010.gui.common
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -15,7 +15,7 @@ import milu.kiriu2010.util.MyTool
 
 // Exceptionを表示するフラグメント
 // 2018.09.04 ピンチイン・アウト
-class ExceptionFragment: Fragment(), View.OnTouchListener {
+class ExceptionFragment: androidx.fragment.app.Fragment(), View.OnTouchListener {
 
     // エラーメッセージ
     private lateinit var strMsg: String
@@ -70,7 +70,7 @@ class ExceptionFragment: Fragment(), View.OnTouchListener {
         // XMLからエラー情報を表示するビューを生成
         val view = inflater.inflate( R.layout.fragment_exception, container, false )
 
-        val ctx = context ?: return view
+        //val ctx = context ?: return view
 
         // エラーメッセージを表示
         val editMsg = view.findViewById<EditText>(R.id.editMsg)

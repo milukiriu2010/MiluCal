@@ -2,10 +2,10 @@ package milu.kiriu2010.milucal.gui.calculator
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +15,11 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.entity.CalData
 import milu.kiriu2010.util.LimitedArrayList
 
-class CalHistory01Fragment : Fragment()
+class CalHistory01Fragment : androidx.fragment.app.Fragment()
     , OnHistoryCallback {
 
     // 計算データの履歴リサイクラービュー
-    private lateinit var recyclerViewHistory: RecyclerView
+    private lateinit var recyclerViewHistory: androidx.recyclerview.widget.RecyclerView
 
     // 計算データの履歴リサイクラービューのアダプタ
     private lateinit var adapter: CalHistoryAdapter
@@ -44,7 +44,11 @@ class CalHistory01Fragment : Fragment()
         recyclerViewHistory = view.findViewById(R.id.recyclerViewHistory)
 
         // 計算データの履歴リサイクラービューのレイアウトマネージャ
-        val layoutManager = LinearLayoutManager(ctx,LinearLayoutManager.VERTICAL,false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            ctx,
+            androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+            false
+        )
         recyclerViewHistory.layoutManager = layoutManager
 
         // 計算データの履歴リサイクラービューのアダプタ
@@ -52,7 +56,10 @@ class CalHistory01Fragment : Fragment()
         recyclerViewHistory.adapter = adapter
 
         // 計算データの履歴リサイクラービューの区切り線
-        val itemDecoration = DividerItemDecoration(ctx,DividerItemDecoration.VERTICAL)
+        val itemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
+            ctx,
+            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+        )
         recyclerViewHistory.addItemDecoration(itemDecoration)
 
         return view

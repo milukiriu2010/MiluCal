@@ -2,10 +2,10 @@ package milu.kiriu2010.milucal.gui.exrate
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import milu.kiriu2010.milucal.entity.ExRateRecordComp
 import kotlin.math.log10
 import kotlin.math.pow
 
-class ExchangeRateSWFragment : Fragment() {
+class ExchangeRateSWFragment : androidx.fragment.app.Fragment() {
 
     // 為替レート(基準通貨)
     private lateinit var exRateRecordA: ExRateRecord
@@ -38,7 +38,7 @@ class ExchangeRateSWFragment : Fragment() {
     private lateinit var dataDescB: TextView
 
     // 基準通貨と比較通貨の強弱リストを表示するリサイクラービュー
-    private lateinit var recyclerViewExchangeRateSW: RecyclerView
+    private lateinit var recyclerViewExchangeRateSW: androidx.recyclerview.widget.RecyclerView
 
     // 基準通貨と比較通貨の強弱リストを表示するリサイクラービューのアダプタ
     private lateinit var adapter: ExchangeRateSWAdapter
@@ -47,9 +47,9 @@ class ExchangeRateSWFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             // 為替レート(基準通貨)
-            exRateRecordA = it.getParcelable("A")
+            exRateRecordA = it.getParcelable("A")!!
             // 為替レート(比較通貨)
-            exRateRecordB = it.getParcelable("B")
+            exRateRecordB = it.getParcelable("B")!!
         }
     }
 
@@ -82,7 +82,11 @@ class ExchangeRateSWFragment : Fragment() {
         recyclerViewExchangeRateSW = view.findViewById(R.id.recyclerViewExchangeRateSW)
 
         // 基準通貨と比較通貨の強弱リストを表示するリサイクラービューのレイアウトマネージャ
-        val layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL,false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            ctx,
+            androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+            false
+        )
         recyclerViewExchangeRateSW.layoutManager = layoutManager
 
         // 基準通貨と比較通貨の強弱リストを表示するリサイクラービューのアダプタ
@@ -90,7 +94,10 @@ class ExchangeRateSWFragment : Fragment() {
         recyclerViewExchangeRateSW.adapter = adapter
 
         // 為替データのリサイクラービューの区切り線
-        val itemDecoration = DividerItemDecoration(ctx, DividerItemDecoration.VERTICAL)
+        val itemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
+            ctx,
+            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+        )
         recyclerViewExchangeRateSW.addItemDecoration(itemDecoration)
 
         return view

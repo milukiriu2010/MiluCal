@@ -3,7 +3,7 @@ package milu.kiriu2010.milucal.gui.misc
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
 import java.util.*
 
-class ConfFragment : DialogFragment()
+class ConfFragment : androidx.fragment.app.DialogFragment()
     , SeekBar.OnSeekBarChangeListener {
 
     // アプリケーションの設定

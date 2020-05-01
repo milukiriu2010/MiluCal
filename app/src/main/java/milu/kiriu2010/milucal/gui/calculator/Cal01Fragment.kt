@@ -2,7 +2,7 @@ package milu.kiriu2010.milucal.gui.calculator
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +13,7 @@ import milu.kiriu2010.cal.v2.ContextCal
 import milu.kiriu2010.milucal.R
 import milu.kiriu2010.util.MyTool
 import java.lang.Exception
+import java.math.BigDecimal
 
 /**
  * A simple [Fragment] subclass.
@@ -20,7 +21,7 @@ import java.lang.Exception
  * create an instance of this fragment.
  *
  */
-class Cal01Fragment : Fragment() {
+class Cal01Fragment : androidx.fragment.app.Fragment() {
 
     // 計算バージョン
     private var calVer = "v2"
@@ -51,7 +52,7 @@ class Cal01Fragment : Fragment() {
 
         // 計算バージョンを設定するグループ
         radioGroup = view.findViewById(R.id.radioGroup)
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
             calVer = when (checkedId) {
                 R.id.rbtnV1 -> "v1"
                 R.id.rbtnV2 -> "v2"
@@ -62,7 +63,7 @@ class Cal01Fragment : Fragment() {
         // 計算式を選択するビュー
         spinCal = view.findViewById(R.id.spinCal)
 
-        val adapter = ArrayAdapter.createFromResource(context,R.array.func_array,android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter.createFromResource(context!!,R.array.func_array,android.R.layout.simple_spinner_item)
         spinCal.adapter = adapter
         spinCal.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -86,23 +87,24 @@ class Cal01Fragment : Fragment() {
         val btnCal = view.findViewById<Button>(R.id.btnCal)
         btnCal.setOnClickListener {
             try {
-                var res = 0.0.toBigDecimal()
-                if ( calVer == "v1") {
-                    val ans = ANS()
-                    // 解析
-                    ans.interpret(editTextCal.text.toString())
-                    // 計算
-                    res = ans.execute().toBigDecimal()
-                }
-                else {
-                    val ctxCal = ContextCal(editTextCal.text.toString())
-                    /*
-                    ctxCal.tokenLst.forEachIndexed { index, s ->
-                        Log.d( javaClass.simpleName, "token[$index][$s]")
+                //var res = 0.0.toBigDecimal()
+                var res: BigDecimal =
+                    if ( calVer == "v1") {
+                        val ans = ANS()
+                        // 解析
+                        ans.interpret(editTextCal.text.toString())
+                        // 計算
+                        ans.execute().toBigDecimal()
                     }
-                    */
-                    res = ctxCal.execute()
-                }
+                    else {
+                        val ctxCal = ContextCal(editTextCal.text.toString())
+                        /*
+                        ctxCal.tokenLst.forEachIndexed { index, s ->
+                            Log.d( javaClass.simpleName, "token[$index][$s]")
+                        }
+                        */
+                        ctxCal.execute()
+                    }
                 // 値を反映
                 textViewResult.text = res.toString()
                 textViewExp.text = ""

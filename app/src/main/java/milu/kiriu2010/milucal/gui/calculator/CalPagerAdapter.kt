@@ -1,10 +1,11 @@
 package milu.kiriu2010.milucal.gui.calculator
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 
-class CalPagerAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {
+class CalPagerAdapter(fm: androidx.fragment.app.FragmentManager):
+    FragmentStatePagerAdapter(fm) {
 
     private lateinit var cal01Fragment: Cal01Fragment
     private lateinit var cal02Fragment: Cal02Fragment

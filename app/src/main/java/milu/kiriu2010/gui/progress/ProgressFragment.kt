@@ -4,7 +4,7 @@ package milu.kiriu2010.gui.progress
 import android.content.Context
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import android.widget.TextView
 
 import milu.kiriu2010.milucal.R
 
-class ProgressFragment : Fragment() {
+class ProgressFragment : androidx.fragment.app.Fragment() {
 
     /*
     // 進捗状況を表示するビュー

@@ -2,9 +2,9 @@ package milu.kiriu2010.gui.drawer
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import milu.kiriu2010.milucal.R
@@ -28,7 +28,7 @@ open class DrawerActivity : AppCompatActivity() {
     }
 
     // 画面が回転するなど、状態が変化したときに呼ばれる
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // 状態の変化をドロワーに伝える
         drawerToggle?.onConfigurationChanged(newConfig)
@@ -52,7 +52,7 @@ open class DrawerActivity : AppCompatActivity() {
         // レイアウトからドロワーを探す
         //   Portrait  => ドロワーあり
         //   Landscape => ドロワーなし
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        val drawerLayout = findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawerLayout)
 
         // レイアウト中にドロワーがある場合設定を行う
         if ( drawerLayout != null ) {
@@ -61,7 +61,7 @@ open class DrawerActivity : AppCompatActivity() {
     }
 
     // ナビゲーションドロワーを開閉するためのアイコンをアクションバーに配置する
-    private fun setupDrawer( drawer: DrawerLayout ) {
+    private fun setupDrawer( drawer: androidx.drawerlayout.widget.DrawerLayout) {
         val toggle = ActionBarDrawerToggle( this, drawer, R.string.app_name, R.string.app_name )
         // ドロワーのトグルを有効にする
         toggle.isDrawerIndicatorEnabled = true

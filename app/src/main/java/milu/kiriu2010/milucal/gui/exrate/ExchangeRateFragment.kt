@@ -3,11 +3,11 @@ package milu.kiriu2010.milucal.gui.exrate
 
 import android.content.Context
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +21,7 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.entity.ExRateRecord
 
-class ExchangeRateFragment : Fragment()
+class ExchangeRateFragment : androidx.fragment.app.Fragment()
     , ExchangeRateCallback {
 
     // 為替データ(Json)
@@ -37,7 +37,7 @@ class ExchangeRateFragment : Fragment()
     private lateinit var layoutExchangeRate: ConstraintLayout
 
     // 為替データのリサイクラービュー
-    private lateinit var recyclerViewExchangeRate: RecyclerView
+    private lateinit var recyclerViewExchangeRate: androidx.recyclerview.widget.RecyclerView
 
     // 為替データのリサイクラービューのアダプタ
     private lateinit var adapter: ExchangeRateAdapter
@@ -124,7 +124,11 @@ class ExchangeRateFragment : Fragment()
         recyclerViewExchangeRate = view.findViewById(R.id.recycleViewExchangeRate)
 
         // 為替データのリサイクラービューのレイアウトマネージャ
-        val layoutManager = LinearLayoutManager(ctx,LinearLayoutManager.VERTICAL,false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            ctx,
+            androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+            false
+        )
         recyclerViewExchangeRate.layoutManager = layoutManager
 
         // 為替データのリサイクラービューのアダプタ
@@ -136,7 +140,10 @@ class ExchangeRateFragment : Fragment()
         recyclerViewExchangeRate.adapter = adapter
 
         // 為替データのリサイクラービューの区切り線
-        val itemDecoration = DividerItemDecoration(ctx,DividerItemDecoration.VERTICAL)
+        val itemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
+            ctx,
+            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+        )
         recyclerViewExchangeRate.addItemDecoration(itemDecoration)
 
         // 為替データ更新ボタン
@@ -154,7 +161,8 @@ class ExchangeRateFragment : Fragment()
         // 通貨名のリソースIDを生成
         val resourceId = resources.getIdentifier("currency_${symbol}", "string", activity?.packageName)
         // リソースから通貨名を取得
-        val desc = resources.getString(resourceId) ?: "Unregistered Currency"
+        //val desc = resources.getString(resourceId) ?: "Unregistered Currency"
+        val desc = resources.getString(resourceId)
         //Log.d(javaClass.simpleName, "desc[$desc]")
         return desc
     }
@@ -245,7 +253,7 @@ class ExchangeRateFragment : Fragment()
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ExchangeRateSWCallback)
         {

@@ -1,7 +1,7 @@
 package milu.kiriu2010.milucal.gui.exrate
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
+import androidx.loader.content.AsyncTaskLoader
 import milu.kiriu2010.loader.v2.AsyncResultOK
 import milu.kiriu2010.milucal.CalApplication
 import milu.kiriu2010.milucal.entity.ExRateJson
@@ -16,7 +16,7 @@ import java.net.URL
 class ExchangeRateLoader(
     context: Context,
     val appl: CalApplication)
-    : AsyncTaskLoader<AsyncResultOK<ExRateJson>>(context) {
+    : androidx.loader.content.AsyncTaskLoader<AsyncResultOK<ExRateJson>>(context) {
 
     // ------------------------------------------
     // 為替レートの結果をキャッシュ

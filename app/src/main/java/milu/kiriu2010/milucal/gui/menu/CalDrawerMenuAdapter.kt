@@ -1,7 +1,7 @@
 package milu.kiriu2010.milucal.gui.menu
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +12,11 @@ class CalDrawerMenuAdapter(
     context: Context,
     private val calDrawerMenuLst: MutableList<CalDrawerMenu> = mutableListOf(),
     private val onItemClick: (CalDrawerMenu) -> Unit )
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         val view: View
-        val viewHolder: RecyclerView.ViewHolder
+        val viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder
         when (viewType) {
             CalDrawerMenuType.TYPE_SUB.viewType -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.list_row_cal_drawer_menu_sub, parent,false)
@@ -38,7 +38,7 @@ class CalDrawerMenuAdapter(
 
     override fun getItemCount(): Int = calDrawerMenuLst.size
 
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, pos: Int) {
+    override fun onBindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, pos: Int) {
         val calDrawerMenu = calDrawerMenuLst[pos]
         when (viewHolder) {
             is CalDrawerMenuViewHolderSub -> {
@@ -57,7 +57,7 @@ class CalDrawerMenuAdapter(
     }
 
     // サブメニュー
-    class CalDrawerMenuViewHolderSub(view: View): RecyclerView.ViewHolder(view) {
+    class CalDrawerMenuViewHolderSub(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // メニュー名
         val textViewMenuSub = view.findViewById<TextView>(R.id.textViewMenuSub)
     }

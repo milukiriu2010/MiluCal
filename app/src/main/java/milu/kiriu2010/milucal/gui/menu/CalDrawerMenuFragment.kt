@@ -3,12 +3,12 @@ package milu.kiriu2010.milucal.gui.menu
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +17,10 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.gui.calculator.MainActivity
 import milu.kiriu2010.milucal.gui.exrate.ExchangeRateActivity
 
-class CalDrawerMenuFragment : Fragment() {
+class CalDrawerMenuFragment : androidx.fragment.app.Fragment() {
 
     // メニューを表示するリサイクラービュー
-    private lateinit var recyclerViewMenu: RecyclerView
+    private lateinit var recyclerViewMenu: androidx.recyclerview.widget.RecyclerView
 
     // メニューを表示するためのアダプタ
     private lateinit var adapter: CalDrawerMenuAdapter
@@ -43,7 +43,11 @@ class CalDrawerMenuFragment : Fragment() {
         val ctx = context ?: return view
 
         // メニューを縦方向に並べて表示
-        val layoutManager = LinearLayoutManager( ctx, LinearLayoutManager.VERTICAL, false )
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            ctx,
+            androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+            false
+        )
         recyclerViewMenu.layoutManager = layoutManager
 
         // メニューを表示するためのアダプタ
@@ -54,7 +58,10 @@ class CalDrawerMenuFragment : Fragment() {
         recyclerViewMenu.adapter = adapter
 
         // 区切り線を入れる
-        val itemDecoration = DividerItemDecoration(ctx,DividerItemDecoration.VERTICAL)
+        val itemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
+            ctx,
+            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+        )
         recyclerViewMenu.addItemDecoration(itemDecoration)
 
         return view
@@ -75,7 +82,7 @@ class CalDrawerMenuFragment : Fragment() {
         // レイアウトからドロワーを探す
         //   Portrait  => ドロワーあり
         //   Landscape => ドロワーなし
-        val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawerLayout)
+        val drawerLayout = activity?.findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawerLayout)
 
         // タップ時にドロワーを閉じる
         if ( drawerLayout != null ) {
@@ -88,7 +95,7 @@ class CalDrawerMenuFragment : Fragment() {
             CalDrawerMenuID.ID_MENU_SUB_CALCULATOR -> Intent(activity, MainActivity::class.java)
             // "為替レート"をクリック
             CalDrawerMenuID.ID_MENU_SUB_EXCHANGE_RATE -> Intent(activity,ExchangeRateActivity::class.java)
-            else -> return
+            //else -> return
         }
 
         startActivity(intent)

@@ -65,9 +65,9 @@ data class ExRateRecord(
 ): Parcelable {
     constructor(parcel: Parcel) : this(
         // 通貨シンボル
-        parcel.readString(),
+        parcel.readString()!!,
         // 通貨名
-        parcel.readString(),
+        parcel.readString()!!,
         // 金額
         parcel.readFloat()
     ) {

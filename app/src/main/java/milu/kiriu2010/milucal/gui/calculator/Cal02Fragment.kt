@@ -10,7 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +31,7 @@ import java.lang.RuntimeException
 import java.util.*
 
 
-class Cal02Fragment : Fragment() {
+class Cal02Fragment : androidx.fragment.app.Fragment() {
     // アプリ設定
     private lateinit var appConf: AppConf
 
@@ -440,7 +440,7 @@ class Cal02Fragment : Fragment() {
                 CalException.ErrType.ERR_FMT_NUMBER -> R.string.errmsg_cal_fmt_number
                 CalException.ErrType.ERR_DIVIDE_ZERO -> R.string.errmsg_cal_divide_zero
                 CalException.ErrType.ERR_NO_OPERAND -> R.string.errmsg_cal_no_operand
-                else -> R.string.errmsg_cal_error
+                //else -> R.string.errmsg_cal_error
             }
             // エラー結果を表示
             dataResult.setText(resources.getString(errId))
@@ -506,7 +506,7 @@ class Cal02Fragment : Fragment() {
         calcExec(true)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if ( context is OnHistoryCallback) {
             historyCallback = context

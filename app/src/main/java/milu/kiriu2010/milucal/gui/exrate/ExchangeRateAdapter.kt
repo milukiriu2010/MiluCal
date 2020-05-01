@@ -1,7 +1,7 @@
 package milu.kiriu2010.milucal.gui.exrate
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +21,7 @@ class ExchangeRateAdapter(
     val exRateRecordBLst: MutableList<ExRateRecord> = mutableListOf(),
     // 為替レート(比較貨幣)クリック時に呼び出されるコールバック
     private val onItemClicked: (ExRateRecord) -> Unit )
-    : RecyclerView.Adapter<ExchangeRateAdapter.ExchangeRateViewHolder>(){
+    : androidx.recyclerview.widget.RecyclerView.Adapter<ExchangeRateAdapter.ExchangeRateViewHolder>(){
 
     private val inflater = LayoutInflater.from(context)
 
@@ -31,8 +31,8 @@ class ExchangeRateAdapter(
 
         // 為替レート(比較貨幣)クリック時に呼び出されるコールバック
         view.setOnClickListener {
-            val pos = viewHolder.adapterPosition
-            val exRateRecord = exRateRecordBLst[pos]
+            val posA = viewHolder.adapterPosition
+            val exRateRecord = exRateRecordBLst[posA]
             onItemClicked(exRateRecord)
         }
 
@@ -79,7 +79,7 @@ class ExchangeRateAdapter(
     }
 
 
-    class ExchangeRateViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ExchangeRateViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // 比較通貨シンボル
         val dataCurrencyCompSymbol= view.findViewById<TextView>(R.id.dataCurrencyCompSymbol)
         // 比較通貨レート

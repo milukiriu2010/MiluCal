@@ -2,8 +2,8 @@ package milu.kiriu2010.milucal.gui.exrate
 
 import android.content.Context
 import android.graphics.Color
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ class ExchangeRateSWAdapter(
     val context: Context,
     // 通貨の比較データのリスト
     val exRateRecordCompLst: MutableList<ExRateRecordComp> = mutableListOf() )
-    : RecyclerView.Adapter<ExchangeRateSWAdapter.ExchangeRateSWViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<ExchangeRateSWAdapter.ExchangeRateSWViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
 
@@ -69,7 +69,7 @@ class ExchangeRateSWAdapter(
         viewHolder.dataRateBx.text = (exRateRecordComp.exRateRecordB.rate/exRateRecordComp.exRateRecordB.rate).toString()
     }
 
-    class ExchangeRateSWViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ExchangeRateSWViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // レイアウト
         val layoutExRateComp = view.findViewById<ConstraintLayout>(R.id.layoutExRateComp)
         // 基準通貨レート
