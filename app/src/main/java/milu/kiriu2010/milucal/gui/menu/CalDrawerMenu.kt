@@ -18,6 +18,7 @@ enum class CalDrawerMenuID() {
     ID_MENU_SUB_EXCHANGE_RATE;
 }
 
+// 左に表示するメニュー
 data class CalDrawerMenu(
     val menuType: CalDrawerMenuType,
     val menuID: CalDrawerMenuID,

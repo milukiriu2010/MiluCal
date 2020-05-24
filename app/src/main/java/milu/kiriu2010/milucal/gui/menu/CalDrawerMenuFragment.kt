@@ -17,10 +17,12 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.gui.calculator.MainActivity
 import milu.kiriu2010.milucal.gui.exrate.ExchangeRateActivity
 
-class CalDrawerMenuFragment : androidx.fragment.app.Fragment() {
+// 左に配置するメニュー
+// ドロワーレイアウトを使用
+class CalDrawerMenuFragment : Fragment() {
 
     // メニューを表示するリサイクラービュー
-    private lateinit var recyclerViewMenu: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerViewMenu: RecyclerView
 
     // メニューを表示するためのアダプタ
     private lateinit var adapter: CalDrawerMenuAdapter
@@ -43,11 +45,7 @@ class CalDrawerMenuFragment : androidx.fragment.app.Fragment() {
         val ctx = context ?: return view
 
         // メニューを縦方向に並べて表示
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-            ctx,
-            androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
-            false
-        )
+        val layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL,false)
         recyclerViewMenu.layoutManager = layoutManager
 
         // メニューを表示するためのアダプタ
@@ -58,10 +56,7 @@ class CalDrawerMenuFragment : androidx.fragment.app.Fragment() {
         recyclerViewMenu.adapter = adapter
 
         // 区切り線を入れる
-        val itemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
-            ctx,
-            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
-        )
+        val itemDecoration = DividerItemDecoration(ctx,DividerItemDecoration.VERTICAL)
         recyclerViewMenu.addItemDecoration(itemDecoration)
 
         return view
@@ -82,7 +77,7 @@ class CalDrawerMenuFragment : androidx.fragment.app.Fragment() {
         // レイアウトからドロワーを探す
         //   Portrait  => ドロワーあり
         //   Landscape => ドロワーなし
-        val drawerLayout = activity?.findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawerLayout)
+        val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawerLayout)
 
         // タップ時にドロワーを閉じる
         if ( drawerLayout != null ) {

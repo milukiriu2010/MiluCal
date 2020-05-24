@@ -69,6 +69,6 @@ class CalApplication: Application() {
             .putInt(SpKey.KEY_HISTORY_CNT.id,appConf.historyCnt)
             // 共有設定へ"スクリーンを常にON"を保存
             .putBoolean(SpKey.KEY_SCREEN_ON.id,appConf.screenOn)
-            .commit()
+            .apply()
     }
 }
