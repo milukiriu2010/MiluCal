@@ -1,8 +1,5 @@
 package milu.kiriu2010.milucal.gui.menu
 
-import android.os.Parcel
-import android.os.Parcelable
-
 // メニュータイプ
 enum class CalDrawerMenuType(val viewType: Int) {
     // メインメニュー

@@ -3,6 +3,7 @@ package milu.kiriu2010.milucal
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import io.realm.Realm
 import milu.kiriu2010.milucal.conf.AppConf
 
 class CalApplication: Application() {
@@ -27,6 +28,9 @@ class CalApplication: Application() {
 
         // 共有設定をロードする
         loadSharedPreferences()
+
+        // Realmライブラリを初期化し、すぐに使用できるデフォルト構成を作成
+        Realm.init(this)
     }
 
     // 共有設定からアプリ設定をロードする

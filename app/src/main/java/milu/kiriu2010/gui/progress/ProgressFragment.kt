@@ -16,13 +16,7 @@ import milu.kiriu2010.milucal.R
 
 class ProgressFragment : androidx.fragment.app.Fragment() {
 
-    /*
-    // 進捗状況を表示するビュー
-    private lateinit var imageViewProgress: ImageView
-    private lateinit var textViewProgress: TextView
-    // アニメーション画像
-    private lateinit var animation: AnimationDrawable
-    */
+    lateinit var progressAbs: ProgressAbstract
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +36,14 @@ class ProgressFragment : androidx.fragment.app.Fragment() {
         // ---------------------------------------------
         // 実行するアニメーションをランダムに決定する
         val randomInteger = (1..ProgressID.values().size).shuffled().first()
-        val progressAbs = ProgressFactory.createInstance(randomInteger)
+        progressAbs = ProgressFactory.createInstance(randomInteger)
         return progressAbs.start(inflater,container,savedInstanceState)
     }
 
+    override fun onDestroyView() {
+        progressAbs.removeHandler()
+        super.onDestroyView()
+    }
 
     companion object {
         @JvmStatic

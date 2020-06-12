@@ -21,7 +21,8 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.entity.ExRateRecord
 
-class ExchangeRateFragment : androidx.fragment.app.Fragment()
+// 為替レートを取得できたら、表示されるフラグメント
+class ExchangeRateFragment : Fragment()
     , ExchangeRateCallback {
 
     // 為替データ(Json)
@@ -37,7 +38,7 @@ class ExchangeRateFragment : androidx.fragment.app.Fragment()
     private lateinit var layoutExchangeRate: ConstraintLayout
 
     // 為替データのリサイクラービュー
-    private lateinit var recyclerViewExchangeRate: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerViewExchangeRate: RecyclerView
 
     // 為替データのリサイクラービューのアダプタ
     private lateinit var adapter: ExchangeRateAdapter
@@ -93,7 +94,9 @@ class ExchangeRateFragment : androidx.fragment.app.Fragment()
 
         // 為替レート(比較通貨)のリスト
         exRateRecordBLst.clear()
-        exRateJson?.rateMap?.keys?.sorted()?.forEach { key ->
+        // キーでソートしたい場合
+        // exRateJson?.rateMap?.keys?.sorted()?.forEach
+        exRateJson?.rateMap?.keys?.forEach { key ->
             // 為替レート(比較貨幣)
             val exRateRecordB = ExRateRecord(key, getDescFromSymbol(key), exRateJson?.rateMap?.get(key) ?: 0f )
             exRateRecordBLst.add(exRateRecordB)
@@ -124,9 +127,9 @@ class ExchangeRateFragment : androidx.fragment.app.Fragment()
         recyclerViewExchangeRate = view.findViewById(R.id.recycleViewExchangeRate)
 
         // 為替データのリサイクラービューのレイアウトマネージャ
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+        val layoutManager = LinearLayoutManager(
             ctx,
-            androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+            LinearLayoutManager.VERTICAL,
             false
         )
         recyclerViewExchangeRate.layoutManager = layoutManager
@@ -140,9 +143,9 @@ class ExchangeRateFragment : androidx.fragment.app.Fragment()
         recyclerViewExchangeRate.adapter = adapter
 
         // 為替データのリサイクラービューの区切り線
-        val itemDecoration = androidx.recyclerview.widget.DividerItemDecoration(
+        val itemDecoration = DividerItemDecoration(
             ctx,
-            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+            DividerItemDecoration.VERTICAL
         )
         recyclerViewExchangeRate.addItemDecoration(itemDecoration)
 
@@ -273,8 +276,11 @@ class ExchangeRateFragment : androidx.fragment.app.Fragment()
         fun newInstance(exRateJson: ExRateJson) =
             ExchangeRateFragment().apply {
                 arguments = Bundle().apply {
+                    // データを取得した日付
                     putString("date",exRateJson.date)
+                    // 基準となる通貨
                     putString("base",exRateJson.base)
+                    // 比較される通貨とレートのマップ
                     exRateJson.rateMap.keys.forEach { key ->
                         // Bundleのキー名が、かぶらないよう"rateMap"をくっつけている
                         putFloat("rateMap${key}", exRateJson.rateMap.get(key)!! )

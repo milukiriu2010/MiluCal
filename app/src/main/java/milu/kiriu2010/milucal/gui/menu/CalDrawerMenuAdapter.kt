@@ -12,11 +12,11 @@ class CalDrawerMenuAdapter(
     context: Context,
     private val calDrawerMenuLst: MutableList<CalDrawerMenu> = mutableListOf(),
     private val onItemClick: (CalDrawerMenu) -> Unit )
-    : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View
-        val viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder
+        val viewHolder: RecyclerView.ViewHolder
         when (viewType) {
             CalDrawerMenuType.TYPE_SUB.viewType -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.list_row_cal_drawer_menu_sub, parent,false)
@@ -38,7 +38,7 @@ class CalDrawerMenuAdapter(
 
     override fun getItemCount(): Int = calDrawerMenuLst.size
 
-    override fun onBindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, pos: Int) {
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, pos: Int) {
         val calDrawerMenu = calDrawerMenuLst[pos]
         when (viewHolder) {
             is CalDrawerMenuViewHolderSub -> {
@@ -57,7 +57,7 @@ class CalDrawerMenuAdapter(
     }
 
     // サブメニュー
-    class CalDrawerMenuViewHolderSub(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    class CalDrawerMenuViewHolderSub(view: View): RecyclerView.ViewHolder(view) {
         // メニュー名
         val textViewMenuSub = view.findViewById<TextView>(R.id.textViewMenuSub)
     }

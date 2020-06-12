@@ -21,7 +21,7 @@ class ExchangeRateAdapter(
     val exRateRecordBLst: MutableList<ExRateRecord> = mutableListOf(),
     // 為替レート(比較貨幣)クリック時に呼び出されるコールバック
     private val onItemClicked: (ExRateRecord) -> Unit )
-    : androidx.recyclerview.widget.RecyclerView.Adapter<ExchangeRateAdapter.ExchangeRateViewHolder>(){
+    : RecyclerView.Adapter<ExchangeRateAdapter.ExchangeRateViewHolder>(){
 
     private val inflater = LayoutInflater.from(context)
 
@@ -52,6 +52,7 @@ class ExchangeRateAdapter(
         // 為替レコード(比較通貨)―通貨名
         viewHolder.dataCurrencyCompDesc.text = exRateRecordB.desc
         // オプションメニュー
+        // 画像"..."をクリックすると、ポップアップメニューが表示される
         viewHolder.imageViewMore.setOnClickListener {
             // ポップアップメニュー
             val popupMenu = PopupMenu(context, viewHolder.imageViewMore)
@@ -64,6 +65,7 @@ class ExchangeRateAdapter(
 
                         //Toast.makeText(context,"test",Toast.LENGTH_LONG).show()
                         // 基準通貨をクリックした通貨に変更する
+                        // 呼び出し元のフラグメントの関数を呼び出している
                         exRateCallback.changeBaseCurrency(exRateRecordB)
                         true
                     }
@@ -79,7 +81,7 @@ class ExchangeRateAdapter(
     }
 
 
-    class ExchangeRateViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    class ExchangeRateViewHolder(view: View): RecyclerView.ViewHolder(view) {
         // 比較通貨シンボル
         val dataCurrencyCompSymbol= view.findViewById<TextView>(R.id.dataCurrencyCompSymbol)
         // 比較通貨レート

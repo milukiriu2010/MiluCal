@@ -1,14 +1,20 @@
 package milu.kiriu2010.milucal.gui.exrate
 
 import android.content.Context
-import androidx.loader.content.AsyncTaskLoader
+import io.realm.Realm
+import io.realm.kotlin.createObject
+import io.realm.kotlin.where
 import milu.kiriu2010.loader.v2.AsyncResultOK
 import milu.kiriu2010.milucal.CalApplication
 import milu.kiriu2010.milucal.entity.ExRateJson
+import milu.kiriu2010.milucal.entity.RealmExBase
+import milu.kiriu2010.milucal.entity.RealmExComp
 import milu.kiriu2010.net.v2.MyURLConAbs
 import milu.kiriu2010.net.v2.MyURLConFactory
+import milu.kiriu2010.util.MyTool
 import org.json.JSONObject
 import java.net.URL
+import java.util.*
 
 // ----------------------------------
 // 為替レートを取得するローダ
@@ -23,9 +29,31 @@ class ExchangeRateLoader(
     // ------------------------------------------
     private var cache: AsyncResultOK<ExRateJson>? = null
 
+    // ------------------------------------------
+    // Realm DB
+    // ------------------------------------------
+    private lateinit var realm: Realm
+
+    // ------------------------------------------
+    // DBに保存された基準通貨と最新データ取得日付
+    // ------------------------------------------
+    private var dbExBase: RealmExBase? = null
+
+    // ------------------------------------------
+    // DBに保存された比較通貨のリスト
+    // ------------------------------------------
+    private val dbExComps = mutableListOf<RealmExComp>()
+
+    init {
+        //realm = Realm.getDefaultInstance()
+    }
+
     override fun loadInBackground(): AsyncResultOK<ExRateJson>? {
         // Loader呼び出し元が受け取るデータ
         val asyncResultOK = AsyncResultOK<ExRateJson>()
+
+        // Realmに保存された内容を取り出す
+        //extractRealm()
 
         // アクセス先URL
         val url = URL(appl.appConf.urlExchangeRate)
@@ -92,6 +120,12 @@ class ExchangeRateLoader(
                     val exRateData = ExRateJson(date,rates,base)
 
                     asyncResultOK.dataOK = exRateData
+
+                    // Realmへデータ保存
+                    //saveRealm(exRateData)
+
+                    // Realmのデータ削除
+                    //clearRealm()
                 }
             }
         }
@@ -148,4 +182,49 @@ class ExchangeRateLoader(
         onStopLoading()
         cache = null
     }
+
+    // ----------------------------------------------
+    // Realmに保存された内容を取り出す
+    // ----------------------------------------------
+    private fun extractRealm() {
+        // DBに保存された基準通貨と最新データ取得日付を取得
+
+
+
+        // DBに保存された比較通貨のリストを取得
+        dbExComps.clear()
+        realm.where<RealmExComp>()
+            .findAll()
+            .sort("id")
+            .forEach {
+                dbExComps.add(it)
+            }
+    }
+
+    // ----------------------------------------------
+    // Realmへデータ保存
+    // ----------------------------------------------
+    private fun saveRealm( exRateData: ExRateJson ) {
+        realm.executeTransaction {
+            // 基準通貨と最新データ取得日を保存
+            val realmExBase = realm.createObject<RealmExBase>()
+            realmExBase.base = exRateData.base
+            realmExBase.date = MyTool.str2date(exRateData.date,"yyyy-MM-dd") ?: Calendar.getInstance().time
+        }
+    }
+
+    // ----------------------------------------------
+    // Realmのデータ削除
+    // ----------------------------------------------
+    private fun clearRealm() {
+        realm.executeTransaction {
+            // 基準通貨と最新データ取得日を削除
+            realm.where<RealmExBase>()
+                .findAll()
+                .deleteAllFromRealm()
+        }
+    }
+
+
+
 }

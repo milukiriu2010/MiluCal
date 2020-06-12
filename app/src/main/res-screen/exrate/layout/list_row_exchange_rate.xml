@@ -23,18 +23,25 @@
             app:layout_constraintTop_toTopOf="@+id/dataCurrencyCompSymbol"
             app:layout_constraintBottom_toBottomOf="@+id/dataCurrencyCompSymbol"/>
     <TextView
+            android:id="@+id/dataCurrencyCompDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/dataCurrencyCompDesc"
-            tools:text="United States Dollar" android:textSize="14sp"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"/>
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="United States Dollar"/>
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:srcCompat="@drawable/svg_more"
             android:id="@+id/imageViewMore"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:srcCompat="@drawable/svg_more"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/dataCurrencyCompRate"
-            app:layout_constraintBottom_toBottomOf="@+id/dataCurrencyCompRate"/>
+            app:layout_constraintBottom_toBottomOf="@+id/dataCurrencyCompRate"
+            tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

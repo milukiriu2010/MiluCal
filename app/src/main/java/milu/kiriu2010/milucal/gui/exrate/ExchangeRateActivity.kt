@@ -26,7 +26,7 @@ import milu.kiriu2010.milucal.id.FragmentID
 import milu.kiriu2010.milucal.id.LoaderID
 
 class ExchangeRateActivity : DrawerActivity()
-    , androidx.loader.app.LoaderManager.LoaderCallbacks<AsyncResultOK<ExRateJson>>
+    , LoaderManager.LoaderCallbacks<AsyncResultOK<ExRateJson>>
     , OnRetryListener
     , ExchangeRateSWCallback {
 
@@ -47,7 +47,7 @@ class ExchangeRateActivity : DrawerActivity()
         appConf.screenControl(this)
 
         // "為替レートを取得するローダ"の初期化と開始
-        androidx.loader.app.LoaderManager.getInstance<androidx.fragment.app.FragmentActivity>(this).initLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
+        LoaderManager.getInstance<FragmentActivity>(this).initLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
 
         // ドロワーメニューを設定
         if (savedInstanceState == null) {
@@ -67,7 +67,7 @@ class ExchangeRateActivity : DrawerActivity()
     // 非同期処理を行うLoaderを生成する
     // getLoaderManager().initLoaderで一回のみ呼び出される
     // ----------------------------------------------------
-    override fun onCreateLoader(id: Int, args: Bundle?): androidx.loader.content.Loader<AsyncResultOK<ExRateJson>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResultOK<ExRateJson>> {
         return when (id) {
             LoaderID.ID_EXCHANGE_RATE.id -> {
                 // 進捗状況を表示するフラグメントを追加
@@ -87,7 +87,7 @@ class ExchangeRateActivity : DrawerActivity()
     // ---------------------------------------------------
     // 非同期処理終了
     // ---------------------------------------------------
-    override fun onLoadFinished(loader: androidx.loader.content.Loader<AsyncResultOK<ExRateJson>>, data: AsyncResultOK<ExRateJson>?) {
+    override fun onLoadFinished(loader: Loader<AsyncResultOK<ExRateJson>>, data: AsyncResultOK<ExRateJson>?) {
         if (data == null) return
         if (loader.id != LoaderID.ID_EXCHANGE_RATE.id) return
 
@@ -129,7 +129,7 @@ class ExchangeRateActivity : DrawerActivity()
 
     // LoaderManager.LoaderCallbacks
     // ローダがリセットされたときに呼ばれる
-    override fun onLoaderReset(loader: androidx.loader.content.Loader<AsyncResultOK<ExRateJson>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResultOK<ExRateJson>>) {
     }
 
     // OnRetryListener
@@ -137,7 +137,7 @@ class ExchangeRateActivity : DrawerActivity()
         Log.d(javaClass.simpleName, "onRetry[$id]")
 
         // "為替レートを取得するロード"の再初期化と開始
-        androidx.loader.app.LoaderManager.getInstance<androidx.fragment.app.FragmentActivity>(this).restartLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
+        LoaderManager.getInstance<FragmentActivity>(this).restartLoader(LoaderID.ID_EXCHANGE_RATE.id, null, this)
     }
 
     // ExchangeRateSWCallback

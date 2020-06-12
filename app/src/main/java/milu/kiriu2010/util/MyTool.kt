@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.util.Log
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.ParseException
@@ -17,6 +18,7 @@ import java.util.TimeZone
 // 2018.10.06  rawファイルの中身をString型に変換
 // 2018.09.25  今日の日付をYYYYMMDD形式で取得
 // 2018.09.15  String(ISO8601+RFC3339)をDateへ変換
+// 2020.06.12  文字列を日付に変換
 class MyTool {
     companion object {
         // ----------------------------------------
@@ -36,14 +38,14 @@ class MyTool {
                 ( numScale <= 0 ) -> { "%d".format(num.toInt()) }
                 // 小数部の桁数が、設定"小数点以下の桁数"より短い場合
                 ( numScale > 0 ) and ( numDecimalPlaces > numScale ) -> {
-                    var strScale = StringBuffer()
+                    val strScale = StringBuffer()
                     (1..numScale).forEach { strScale.append("#") }
                     val decimalFmt = DecimalFormat("###." + strScale )
                     decimalFmt.format(num)
                 }
                 // 小数部の桁数が、設定"小数点以下の桁数"より長い場合
                 else -> {
-                    var strScale = StringBuffer()
+                    val strScale = StringBuffer()
                     (1..numDecimalPlaces).forEach { strScale.append("#") }
                     val decimalFmt = DecimalFormat("###." + strScale )
                     decimalFmt.format(num)
@@ -59,7 +61,7 @@ class MyTool {
         // ----------------------------------------
         // https://ja.wikipedia.org/wiki/%E9%9A%8E%E4%B9%97
         fun factorial( num: Int ): Int {
-            var x: Int
+            val x: Int
             if ( num > 0 ) {
                 x = num * factorial(num-1)
             }
@@ -98,7 +100,7 @@ class MyTool {
         fun getToday( zone: String = "Asia/Tokyo" ): String {
             // Date()はUTCなので、タイムゾーンを"Asia/Tokyo"にして変換する
             val date = Date()
-            val dateFormat = SimpleDateFormat("yyyyMMdd")
+            val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
             dateFormat.timeZone = TimeZone.getTimeZone(zone)
             return dateFormat.format(date)
         }
@@ -113,11 +115,34 @@ class MyTool {
         fun rfc3339date(str: String): Date {
             try {
                 val formatterRFC3339_1 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz", Locale.US)
-                return formatterRFC3339_1.parse(str)
+                return formatterRFC3339_1.parse(str)!!
             } catch ( parseEx: ParseException) {
                 val formatterRFC3339_2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-                return formatterRFC3339_2.parse(str)
+                return formatterRFC3339_2.parse(str)!!
             }
+        }
+
+        // -----------------------------
+        // 2020.06.12
+        // -----------------------------
+        // 文字列を日付に変換
+        // -----------------------------
+        fun str2date( str: String, pattern: String = "yyyy/MM/dd HH:mm:ss"): Date? {
+            val sdFormat = try {
+                SimpleDateFormat(pattern, Locale.getDefault())
+            } catch ( e: IllegalArgumentException ) {
+                null
+            }
+
+            val date = sdFormat?.let {
+                try {
+                    it.parse(str)
+                } catch ( e: ParseException ) {
+                    null
+                }
+            }
+
+            return date
         }
 
         // ----------------------------------------

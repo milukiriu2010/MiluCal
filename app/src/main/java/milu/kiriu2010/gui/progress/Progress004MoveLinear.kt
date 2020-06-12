@@ -86,6 +86,8 @@ class Progress004MoveLinear: ProgressAbstract() {
 
         }
 
+        // 経過時間を表示
+        updateElapsedTime(view)
 
         return view
     }
