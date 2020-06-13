@@ -16,8 +16,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import milu.kiriu2010.milucal.CalApplication
 
 import milu.kiriu2010.milucal.R
+import milu.kiriu2010.milucal.conf.AppConf
 import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.entity.ExRateRecord
 
@@ -62,6 +64,15 @@ class ExchangeRateFragment : Fragment()
     // 基準通貨と比較通貨の強弱リストを表示するコールバック
     private var exchangeRateSWCallback: ExchangeRateSWCallback? = null
 
+    // アプリケーションオブジェクト
+    private lateinit var calApp: CalApplication
+
+    // アプリ設定
+    private lateinit var appConf: AppConf
+
+    init {
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -75,8 +86,13 @@ class ExchangeRateFragment : Fragment()
                 val currency =  key.substringAfterLast("rateMap")
                 rateMap[currency] = it.getFloat(key)
             }
+
+            // アプリ設定を読み込む
+            calApp = context?.applicationContext as CalApplication
+            appConf = calApp.appConf
+
             // 為替データ(Json)
-            exRateJson = ExRateJson(date,rateMap,base)
+            exRateJson = ExRateJson(date,rateMap,base).copy().changeBase(appConf.baseCurSymbol)
         }
     }
 
@@ -254,6 +270,10 @@ class ExchangeRateFragment : Fragment()
         recyclerViewExchangeRate.post {
             recyclerViewExchangeRate.smoothScrollToPosition(0)
         }
+
+        // アプリ設定として保存
+        appConf.baseCurSymbol = nextBaseExRateRecord.symbol
+        calApp.saveSharedPreferences()
     }
 
     override fun onAttach(context: Context) {

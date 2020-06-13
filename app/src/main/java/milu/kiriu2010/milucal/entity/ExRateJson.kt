@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.lang.Exception
 import java.util.*
 
 // 為替レートのJsonデータ
@@ -51,11 +52,33 @@ data class ExRateJson(
     // 日付
     // 2018-11-30
     val date: String,
-    // レート
+    // レート一覧
+    // key:比較通貨のシンボル
+    // val:比較通貨のレート
     val rateMap: MutableMap<String,Float>,
     // 基準となる通貨
-    val base: String
-)
+    var base: String
+) {
+    // 基準となる通貨を変更
+    // nBase: 次に基準となる通貨のシンボル
+    fun changeBase( nBase: String ): ExRateJson {
+        // 次に基準となる通貨のレート
+        val nRate = rateMap[nBase] ?: throw Exception("not found next currency")
+        // レート一覧から次に基準となる通貨を削除
+        rateMap.remove(nBase)
+        // レート一覧に前の基準通貨を追加
+        rateMap[base] = 1f
+        // レート一覧を、次に基準となる通貨のレートで更新
+        rateMap.keys.forEach { k ->
+            rateMap[k] = rateMap[k]!!.div(nRate)
+        }
+
+        // 基準通貨を変更
+        base = nBase
+
+        return this
+    }
+}
 
 // 各通貨ごとのデータ
 data class ExRateRecord(

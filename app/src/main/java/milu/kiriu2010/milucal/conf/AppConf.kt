@@ -23,7 +23,11 @@ class AppConf {
     // --------------------------------------
     // 為替レート用設定
     // --------------------------------------
+    // データを取得するURL
     var urlExchangeRate: String = "https://api.exchangeratesapi.io/latest"
+    // 基準通貨のシンボル
+    // USD/JPY/PHP
+    var baseCurSymbol: String = "USD"
 
     // --------------------------------------
     // 共通設定
@@ -45,6 +49,12 @@ class AppConf {
         tax2 = appConfDef.tax2
         // 対数(x)
         logx = appConfDef.logx
+
+        // --------------------------------------
+        // 為替レート用設定
+        // --------------------------------------
+        // 基準通貨のシンボル
+        baseCurSymbol = appConfDef.baseCurSymbol
 
         // --------------------------------------
         // 共通設定

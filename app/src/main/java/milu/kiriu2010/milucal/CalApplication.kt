@@ -17,7 +17,12 @@ class CalApplication: Application() {
         KEY_LOGX("logx"),
         KEY_NUM_DECIMAL_PLACES("numDecimalPlaces"),
         KEY_HISTORY_CNT("historyCnt"),
-        KEY_SCREEN_ON("screenOn")
+        KEY_SCREEN_ON("screenOn"),
+        // --------------------------------------
+        // 為替レート用設定
+        // --------------------------------------
+        // 基準通貨のシンボル
+        KEY_BASE_CUR_SYMBOL("baseCurSymbol")
     }
 
     // -------------------------------------
@@ -52,6 +57,11 @@ class CalApplication: Application() {
         appConf.historyCnt = sp.getInt(SpKey.KEY_HISTORY_CNT.id,appConfDef.historyCnt)
         // 共有設定から"スクリーンを常にON"を取得
         appConf.screenOn = sp.getBoolean(SpKey.KEY_SCREEN_ON.id,appConfDef.screenOn)
+        // --------------------------------------
+        // 為替レート用設定
+        // --------------------------------------
+        // 基準通貨のシンボル
+        appConf.baseCurSymbol = sp.getString(SpKey.KEY_BASE_CUR_SYMBOL.id,appConfDef.baseCurSymbol)!!
     }
 
     // 共有設定へアプリ設定を保存する
@@ -73,6 +83,8 @@ class CalApplication: Application() {
             .putInt(SpKey.KEY_HISTORY_CNT.id,appConf.historyCnt)
             // 共有設定へ"スクリーンを常にON"を保存
             .putBoolean(SpKey.KEY_SCREEN_ON.id,appConf.screenOn)
+            // 基準通貨のシンボル
+            .putString(SpKey.KEY_BASE_CUR_SYMBOL.id,appConf.baseCurSymbol)
             .apply()
     }
 }
