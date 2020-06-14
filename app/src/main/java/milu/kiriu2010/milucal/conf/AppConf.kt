@@ -28,6 +28,10 @@ class AppConf {
     // 基準通貨のシンボル
     // USD/JPY/PHP
     var baseCurSymbol: String = "USD"
+    // 比較通貨のシンボルリスト(Json形式)
+    var compCurSymbols: String = """
+    |{"curs": ["EUR","JPY","GBP"]}
+    """.trimMargin("|")
 
     // --------------------------------------
     // 共通設定
@@ -55,6 +59,8 @@ class AppConf {
         // --------------------------------------
         // 基準通貨のシンボル
         baseCurSymbol = appConfDef.baseCurSymbol
+        // 比較通貨のシンボルリスト(Json形式)
+        compCurSymbols = appConfDef.compCurSymbols
 
         // --------------------------------------
         // 共通設定

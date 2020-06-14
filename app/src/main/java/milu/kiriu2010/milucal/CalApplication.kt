@@ -22,7 +22,9 @@ class CalApplication: Application() {
         // 為替レート用設定
         // --------------------------------------
         // 基準通貨のシンボル
-        KEY_BASE_CUR_SYMBOL("baseCurSymbol")
+        KEY_BASE_CUR_SYMBOL("baseCurSymbol"),
+        // 比較通貨のシンボルリスト(Json形式)
+        KEY_COMP_CUR_SYMBOLS("compCurSymbols")
     }
 
     // -------------------------------------
@@ -62,6 +64,8 @@ class CalApplication: Application() {
         // --------------------------------------
         // 基準通貨のシンボル
         appConf.baseCurSymbol = sp.getString(SpKey.KEY_BASE_CUR_SYMBOL.id,appConfDef.baseCurSymbol)!!
+        // 比較通貨のシンボルリスト(Json形式)
+        appConf.compCurSymbols = sp.getString(SpKey.KEY_COMP_CUR_SYMBOLS.id,appConfDef.compCurSymbols)!!
     }
 
     // 共有設定へアプリ設定を保存する
@@ -85,6 +89,8 @@ class CalApplication: Application() {
             .putBoolean(SpKey.KEY_SCREEN_ON.id,appConf.screenOn)
             // 基準通貨のシンボル
             .putString(SpKey.KEY_BASE_CUR_SYMBOL.id,appConf.baseCurSymbol)
+            // 比較通貨のシンボルリスト(Json形式)
+            .putString(SpKey.KEY_COMP_CUR_SYMBOLS.id,appConf.compCurSymbols)
             .apply()
     }
 }

@@ -3,12 +3,12 @@ package milu.kiriu2010.milucal.gui.exrate
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +22,8 @@ import milu.kiriu2010.milucal.R
 import milu.kiriu2010.milucal.conf.AppConf
 import milu.kiriu2010.milucal.entity.ExRateJson
 import milu.kiriu2010.milucal.entity.ExRateRecord
+import org.json.JSONArray
+import org.json.JSONObject
 
 // 為替レートを取得できたら、表示されるフラグメント
 class ExchangeRateFragment : Fragment()
@@ -108,11 +110,30 @@ class ExchangeRateFragment : Fragment()
         // 為替レート(基準通貨)
         exRateRecordA = ExRateRecord(baseSymbol,getDescFromSymbol(baseSymbol),1f)
 
+        // 共有プリファレンスに保存された比較通貨シンボルのリスト
+        Log.d(javaClass.simpleName,"appConf.comCurSymbos=${appConf.compCurSymbols}")
+        val jSonCompCurSymbols = JSONObject(appConf.compCurSymbols)
+            .getJSONArray("curs")
+        val compCurSymbols = mutableListOf<String>()
+        (0 until jSonCompCurSymbols.length()).forEach {
+            compCurSymbols.add(jSonCompCurSymbols.get(it) as String)
+            Log.d( javaClass.simpleName, "compCurSymbol[${it}]=${jSonCompCurSymbols.get(it)}")
+        }
+
         // 為替レート(比較通貨)のリスト
         exRateRecordBLst.clear()
+        // 共有プリファレンスの比較通貨シンボルのリストを用いて、まず構築する
+        compCurSymbols.forEach { key ->
+            Log.d(javaClass.simpleName, "compCurSymbols:${key}")
+            // 為替レート(比較貨幣)
+            val exRateRecordB = ExRateRecord(key, getDescFromSymbol(key), exRateJson?.rateMap?.get(key) ?: 0f )
+            exRateRecordBLst.add(exRateRecordB)
+        }
         // キーでソートしたい場合
-        // exRateJson?.rateMap?.keys?.sorted()?.forEach
-        exRateJson?.rateMap?.keys?.forEach { key ->
+        exRateJson?.rateMap?.keys?.sorted()?.forEach { key ->
+            // すでにリストに加えているシンボルの登録はスキップする
+            if ( compCurSymbols.contains(key) ) return@forEach
+
             // 為替レート(比較貨幣)
             val exRateRecordB = ExRateRecord(key, getDescFromSymbol(key), exRateJson?.rateMap?.get(key) ?: 0f )
             exRateRecordBLst.add(exRateRecordB)
@@ -180,7 +201,6 @@ class ExchangeRateFragment : Fragment()
         // 通貨名のリソースIDを生成
         val resourceId = resources.getIdentifier("currency_${symbol}", "string", activity?.packageName)
         // リソースから通貨名を取得
-        //val desc = resources.getString(resourceId) ?: "Unregistered Currency"
         val desc = resources.getString(resourceId)
         //Log.d(javaClass.simpleName, "desc[$desc]")
         return desc
@@ -271,8 +291,21 @@ class ExchangeRateFragment : Fragment()
             recyclerViewExchangeRate.smoothScrollToPosition(0)
         }
 
+        // 通貨リストのシンボルをJson配列にする
+        val jsonCur = JSONObject()
+        val jsonCurs = JSONArray()
+        exRateRecordBLst.forEach {
+            jsonCurs.put(it.symbol)
+        }
+        jsonCur.put( "curs", jsonCurs)
+
+        // -----------------------------
         // アプリ設定として保存
+        // -----------------------------
+        // 基準通貨のシンボル
         appConf.baseCurSymbol = nextBaseExRateRecord.symbol
+        // 比較通貨のシンボルリスト(Json形式)
+        appConf.compCurSymbols = jsonCur.toString()
         calApp.saveSharedPreferences()
     }
 
