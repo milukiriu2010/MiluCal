@@ -17,7 +17,8 @@ import milu.kiriu2010.milucal.entity.ExRateRecordComp
 import kotlin.math.log10
 import kotlin.math.pow
 
-class ExchangeRateSWFragment : androidx.fragment.app.Fragment() {
+// 2つの通貨を比較するフラグメント
+class ExchangeRateSWFragment : Fragment() {
 
     // 為替レート(基準通貨)
     private lateinit var exRateRecordA: ExRateRecord

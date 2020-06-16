@@ -9,7 +9,7 @@ import android.widget.TextView
 import milu.kiriu2010.milucal.R
 
 class CalDrawerMenuAdapter(
-    context: Context,
+    @Suppress("UNUSED_PARAMETER") context: Context,
     private val calDrawerMenuLst: MutableList<CalDrawerMenu> = mutableListOf(),
     private val onItemClick: (CalDrawerMenu) -> Unit )
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

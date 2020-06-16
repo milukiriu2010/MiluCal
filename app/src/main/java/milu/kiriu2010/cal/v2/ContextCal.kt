@@ -381,6 +381,7 @@ class ContextCal(
                                 ite.remove()
                                 index--
                             }
+                            else -> {}
                         }
 
                         prevCalType = CalType.NUM

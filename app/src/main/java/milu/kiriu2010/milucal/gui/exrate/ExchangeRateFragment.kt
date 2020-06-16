@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
 import milu.kiriu2010.milucal.CalApplication
 
 import milu.kiriu2010.milucal.R
@@ -72,7 +73,78 @@ class ExchangeRateFragment : Fragment()
     // アプリ設定
     private lateinit var appConf: AppConf
 
-    init {
+    // ロングタッチで移動できるようにするためのおまじない
+    // https://medium.com/@yfujiki/drag-and-reorder-recyclerview-items-in-a-user-friendly-manner-1282335141e9
+    private val itemTouchHelper by lazy {
+        // 1. Note that I am specifying all 4 directions.
+        //    Specifying START and END also allows
+        //    more organic dragging than just specifying UP and DOWN.
+        val simpleItemTouchCallback =
+            object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+                0
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val adapter = recyclerView.adapter as ExchangeRateAdapter
+                    val from = viewHolder.adapterPosition
+                    val to = target.adapterPosition
+                    // 2. Update the backing model. Custom implementation in
+                    //    MainRecyclerViewAdapter. You need to implement
+                    //    reordering of the backing model inside the method.
+                    adapter.moveItem(from, to)
+                    // 3. Tell adapter to render the model update.
+                    adapter.notifyItemMoved(from, to)
+
+                    // 通貨リストのシンボルをJson配列にする
+                    val jsonCur = JSONObject()
+                    val jsonCurs = JSONArray()
+                    exRateRecordBLst.forEach {
+                        jsonCurs.put(it.symbol)
+                    }
+                    jsonCur.put( "curs", jsonCurs)
+
+                    // -----------------------------
+                    // アプリ設定として保存
+                    // -----------------------------
+                    // 比較通貨のシンボルリスト(Json形式)
+                    appConf.compCurSymbols = jsonCur.toString()
+                    calApp.saveSharedPreferences()
+
+                    return true
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    // 4. Code block for horizontal swipe.
+                    //    ItemTouchHelper handles horizontal swipe as well, but
+                    //    it is not relevant with reordering. Ignoring here.
+                }
+
+                // onSelectedChanged と clearView で
+                // ロングタッチでドラッグ＆ドロップができることを知らせるおまじない
+
+                override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?,
+                                               actionState: Int) {
+                    super.onSelectedChanged(viewHolder, actionState)
+
+                    if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                        viewHolder?.itemView?.alpha = 0.5f
+                    }
+                }
+
+                // 2. This callback is called when the ViewHolder is
+                //    unselected (dropped). We unhighlight the ViewHolder here.
+                override fun clearView(recyclerView: RecyclerView,
+                                       viewHolder: RecyclerView.ViewHolder) {
+                    super.clearView(recyclerView, viewHolder)
+                    viewHolder.itemView.alpha = 1.0f
+                }
+            }
+
+        ItemTouchHelper(simpleItemTouchCallback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,20 +183,20 @@ class ExchangeRateFragment : Fragment()
         exRateRecordA = ExRateRecord(baseSymbol,getDescFromSymbol(baseSymbol),1f)
 
         // 共有プリファレンスに保存された比較通貨シンボルのリスト
-        Log.d(javaClass.simpleName,"appConf.comCurSymbos=${appConf.compCurSymbols}")
+        //Log.d(javaClass.simpleName,"appConf.comCurSymbos=${appConf.compCurSymbols}")
         val jSonCompCurSymbols = JSONObject(appConf.compCurSymbols)
             .getJSONArray("curs")
         val compCurSymbols = mutableListOf<String>()
         (0 until jSonCompCurSymbols.length()).forEach {
             compCurSymbols.add(jSonCompCurSymbols.get(it) as String)
-            Log.d( javaClass.simpleName, "compCurSymbol[${it}]=${jSonCompCurSymbols.get(it)}")
+            //Log.d( javaClass.simpleName, "compCurSymbol[${it}]=${jSonCompCurSymbols.get(it)}")
         }
 
         // 為替レート(比較通貨)のリスト
         exRateRecordBLst.clear()
         // 共有プリファレンスの比較通貨シンボルのリストを用いて、まず構築する
         compCurSymbols.forEach { key ->
-            Log.d(javaClass.simpleName, "compCurSymbols:${key}")
+            //Log.d(javaClass.simpleName, "compCurSymbols:${key}")
             // 為替レート(比較貨幣)
             val exRateRecordB = ExRateRecord(key, getDescFromSymbol(key), exRateJson?.rateMap?.get(key) ?: 0f )
             exRateRecordBLst.add(exRateRecordB)
@@ -185,6 +257,9 @@ class ExchangeRateFragment : Fragment()
             DividerItemDecoration.VERTICAL
         )
         recyclerViewExchangeRate.addItemDecoration(itemDecoration)
+
+        // ロングタッチによるアイテム移動をするために、補助とリサイクラビューを結びつける
+        itemTouchHelper.attachToRecyclerView(recyclerViewExchangeRate)
 
         // 為替データ更新ボタン
         btnUpdate = view.findViewById(R.id.btnUpdate)

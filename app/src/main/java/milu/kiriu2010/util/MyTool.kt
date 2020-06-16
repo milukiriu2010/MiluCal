@@ -31,7 +31,7 @@ class MyTool {
         fun fromBigDeimal2String(num: BigDecimal, numDecimalPlaces: Int): String {
             val numScale = num.scale()
             val numPrecision = num.precision()
-            Log.d( javaClass.simpleName, "ans[$num]scale[$numScale]precision[$numPrecision]")
+            Log.d( MyTool::javaClass.name, "ans[$num]scale[$numScale]precision[$numPrecision]")
 
             return when {
                 // 整数部のみ

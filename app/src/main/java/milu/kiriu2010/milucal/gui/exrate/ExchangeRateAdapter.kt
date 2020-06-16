@@ -80,6 +80,15 @@ class ExchangeRateAdapter(
 
     }
 
+    // アイテムを移動する
+    fun moveItem(from: Int, to: Int): ExRateRecord {
+        // 為替レコード(比較通貨)
+        val exRateRecordB = exRateRecordBLst[from]
+        exRateRecordBLst.removeAt(from)
+        exRateRecordBLst.add(to,exRateRecordB)
+        notifyDataSetChanged()
+        return exRateRecordB
+    }
 
     class ExchangeRateViewHolder(view: View): RecyclerView.ViewHolder(view) {
         // 比較通貨シンボル

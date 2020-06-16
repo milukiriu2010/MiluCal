@@ -2,10 +2,7 @@ package milu.kiriu2010.milucal.entity
 
 import android.os.Parcel
 import android.os.Parcelable
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
 import java.lang.Exception
-import java.util.*
 
 // 為替レートのJsonデータ
 /*
@@ -141,25 +138,3 @@ data class ExRateRecordComp(
     //   < 0: 円高
     val comp: Int
 )
-
-// --------------------------
-// Realmに保存するデータ
-// ・最新データ取得日付
-// ・基準通貨のシンボル
-// --------------------------
-open class RealmExBase: RealmObject() {
-    var date: Date = Date()
-    var base: String = ""
-}
-
-// --------------------------
-// Realmに保存するデータ
-// ・比較通貨のシンボル
-// ・レート
-// --------------------------
-open class RealmExComp: RealmObject() {
-    @PrimaryKey
-    var id: Int = 0
-    var compCurr: String = ""
-    var compRate: Float = 0f
-}

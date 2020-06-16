@@ -25,6 +25,10 @@ class AppConf {
     // --------------------------------------
     // データを取得するURL
     var urlExchangeRate: String = "https://api.exchangeratesapi.io/latest"
+    // 最後にデータを取得した時刻(UTC)
+    var curLastAccessTime: Long = 0
+    // 最後に取得したデータ(Json)
+    var curLastAccessData: String = ""
     // 基準通貨のシンボル
     // USD/JPY/PHP
     var baseCurSymbol: String = "USD"
@@ -57,6 +61,10 @@ class AppConf {
         // --------------------------------------
         // 為替レート用設定
         // --------------------------------------
+        // 最後にデータを取得した時刻(UTC)
+        curLastAccessTime = appConfDef.curLastAccessTime
+        // 最後に取得したデータ(Json)
+        curLastAccessData = appConfDef.curLastAccessData
         // 基準通貨のシンボル
         baseCurSymbol = appConfDef.baseCurSymbol
         // 比較通貨のシンボルリスト(Json形式)

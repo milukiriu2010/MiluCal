@@ -3,7 +3,6 @@ package milu.kiriu2010.milucal
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import io.realm.Realm
 import milu.kiriu2010.milucal.conf.AppConf
 
 class CalApplication: Application() {
@@ -21,6 +20,10 @@ class CalApplication: Application() {
         // --------------------------------------
         // 為替レート用設定
         // --------------------------------------
+        // 最後にデータを取得した時刻(UTC)
+        KEY_CUR_LAST_ACCESS_TIME("curLastAccessTime"),
+        // 最後に取得したデータ(Json)
+        KEY_CUR_LAST_ACCESS_DATA("curLastAccessData"),
         // 基準通貨のシンボル
         KEY_BASE_CUR_SYMBOL("baseCurSymbol"),
         // 比較通貨のシンボルリスト(Json形式)
@@ -35,9 +38,6 @@ class CalApplication: Application() {
 
         // 共有設定をロードする
         loadSharedPreferences()
-
-        // Realmライブラリを初期化し、すぐに使用できるデフォルト構成を作成
-        Realm.init(this)
     }
 
     // 共有設定からアプリ設定をロードする
@@ -62,6 +62,10 @@ class CalApplication: Application() {
         // --------------------------------------
         // 為替レート用設定
         // --------------------------------------
+        // 最後にデータを取得した時刻(UTC)
+        appConf.curLastAccessTime = sp.getLong(SpKey.KEY_CUR_LAST_ACCESS_TIME.id,appConfDef.curLastAccessTime)
+        // 最後に取得したデータ(Json)
+        appConf.curLastAccessData = sp.getString(SpKey.KEY_CUR_LAST_ACCESS_DATA.id,appConfDef.curLastAccessData)!!
         // 基準通貨のシンボル
         appConf.baseCurSymbol = sp.getString(SpKey.KEY_BASE_CUR_SYMBOL.id,appConfDef.baseCurSymbol)!!
         // 比較通貨のシンボルリスト(Json形式)
@@ -87,6 +91,10 @@ class CalApplication: Application() {
             .putInt(SpKey.KEY_HISTORY_CNT.id,appConf.historyCnt)
             // 共有設定へ"スクリーンを常にON"を保存
             .putBoolean(SpKey.KEY_SCREEN_ON.id,appConf.screenOn)
+            // 最後にデータを取得した時刻(UTC)
+            .putLong(SpKey.KEY_CUR_LAST_ACCESS_TIME.id,appConf.curLastAccessTime)
+            // 最後に取得したデータ(Json)
+            .putString(SpKey.KEY_CUR_LAST_ACCESS_DATA.id,appConf.curLastAccessData)
             // 基準通貨のシンボル
             .putString(SpKey.KEY_BASE_CUR_SYMBOL.id,appConf.baseCurSymbol)
             // 比較通貨のシンボルリスト(Json形式)
