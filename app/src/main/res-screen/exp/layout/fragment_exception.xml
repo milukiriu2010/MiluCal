@@ -20,7 +20,8 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/btnRetry"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill,LabelFor" />
 
     <EditText
         android:id="@+id/editExp"
@@ -38,7 +39,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editMsg" />
+        app:layout_constraintTop_toBottomOf="@+id/editMsg"
+            tools:ignore="Autofill,LabelFor" />
 
     <Button
             android:id="@+id/btnRetry"

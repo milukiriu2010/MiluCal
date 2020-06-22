@@ -29,7 +29,8 @@
             app:layout_constraintStart_toEndOf="@+id/dataCurrencyBaseSymbol" android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintTop_toTopOf="@+id/dataCurrencyBaseSymbol"
-            app:layout_constraintBottom_toBottomOf="@+id/dataCurrencyBaseSymbol"/>
+            app:layout_constraintBottom_toBottomOf="@+id/dataCurrencyBaseSymbol"
+            tools:ignore="Autofill,LabelFor" />
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
